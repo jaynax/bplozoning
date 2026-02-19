@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\CertificateDesignController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +48,15 @@ Route::prefix('certificate')->middleware('auth')->group(function () {
     Route::get('/residential/form', [CertificateController::class, 'showResidentialForm'])->name('certificate.residential.form');
     Route::post('/business/generate', [CertificateController::class, 'generateBusiness'])->name('certificate.business.generate');
     Route::post('/residential/generate', [CertificateController::class, 'generateResidential'])->name('certificate.residential.generate');
+});
+
+// Certificate Design Routes
+Route::prefix('certificate-designs')->middleware('auth')->group(function () {
+    Route::get('/', [CertificateDesignController::class, 'index'])->name('certificate-designs.index');
+    Route::get('/categories', [CertificateDesignController::class, 'categories'])->name('certificate-designs.categories');
+    Route::get('/category/{category}', [CertificateDesignController::class, 'byCategory'])->name('certificate-designs.byCategory');
+    Route::get('/{slug}', [CertificateDesignController::class, 'show'])->name('certificate-designs.show');
+    Route::post('/', [CertificateDesignController::class, 'store'])->name('certificate-designs.store');
+    Route::put('/{certificateDesign}', [CertificateDesignController::class, 'update'])->name('certificate-designs.update');
+    Route::delete('/{certificateDesign}', [CertificateDesignController::class, 'destroy'])->name('certificate-designs.destroy');
 });

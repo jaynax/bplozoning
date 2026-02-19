@@ -54,24 +54,30 @@
                         <label for="owner_name" class="block text-sm font-medium text-gray-700 mb-2">
                             Full Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" 
-                               id="owner_name" 
-                               name="owner_name" 
-                               required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Enter full name of business owner">
+                        <div class="relative">
+                            <input type="text" 
+                                   id="owner_name" 
+                                   name="owner_name" 
+                                   required
+                                   class="w-full px-4 py-2 border-0 border-b-2 border-gray-400 rounded-none focus:ring-0 focus:border-blue-500 focus:border-b-2 bg-transparent"
+                                   placeholder="Enter full name of business owner">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">This will appear as: _________________________ in the certificate</p>
                     </div>
                     
                     <div class="mt-4">
                         <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
                             Complete Address <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" 
-                               id="address" 
-                               name="address" 
-                               required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Enter complete address (e.g., Poblacion, Sogod, Southern Leyte)">
+                        <div class="relative">
+                            <input type="text" 
+                                   id="address" 
+                                   name="address" 
+                                   required
+                                   class="w-full px-4 py-2 border-0 border-b-2 border-gray-400 rounded-none focus:ring-0 focus:border-blue-500 focus:border-b-2 bg-transparent"
+                                   placeholder="Enter complete address (e.g., Poblacion, Sogod, Southern Leyte)">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">This will appear as: _______________________________________ in the certificate</p>
                     </div>
                 </div>
 
