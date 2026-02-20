@@ -43,11 +43,23 @@ Route::prefix('user')->middleware('auth')->group(function () {
 
 // Certificate Routes
 Route::prefix('certificate')->middleware('auth')->group(function () {
+    Route::get('/', [CertificateController::class, 'index'])->name('certificate.index');
     Route::get('/create', [CertificateController::class, 'createForm'])->name('certificate.create');
+    Route::get('/{certificate}', [CertificateController::class, 'show'])->name('certificate.show');
+    Route::get('/{certificate}/download', [CertificateController::class, 'download'])->name('certificate.download');
+    Route::delete('/{certificate}', [CertificateController::class, 'destroy'])->name('certificate.delete');
     Route::get('/business/form', [CertificateController::class, 'showBusinessForm'])->name('certificate.business.form');
     Route::get('/residential/form', [CertificateController::class, 'showResidentialForm'])->name('certificate.residential.form');
+    Route::get('/landuse/form', [CertificateController::class, 'showLandUseForm'])->name('certificate.landuse.form');
+    Route::get('/building/form', [CertificateController::class, 'showBuildingForm'])->name('certificate.building.form');
+    Route::get('/compliance/form', [CertificateController::class, 'showComplianceForm'])->name('certificate.compliance.form');
+    Route::get('/environmental/form', [CertificateController::class, 'showEnvironmentalForm'])->name('certificate.environmental.form');
     Route::post('/business/generate', [CertificateController::class, 'generateBusiness'])->name('certificate.business.generate');
     Route::post('/residential/generate', [CertificateController::class, 'generateResidential'])->name('certificate.residential.generate');
+    Route::post('/landuse/generate', [CertificateController::class, 'generateLandUse'])->name('certificate.landuse.generate');
+    Route::post('/building/generate', [CertificateController::class, 'generateBuilding'])->name('certificate.building.generate');
+    Route::post('/compliance/generate', [CertificateController::class, 'generateCompliance'])->name('certificate.compliance.generate');
+    Route::post('/environmental/generate', [CertificateController::class, 'generateEnvironmental'])->name('certificate.environmental.generate');
 });
 
 // Certificate Design Routes
