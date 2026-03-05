@@ -8,53 +8,141 @@
     <style>
         @media print {
             .no-print { display: none !important; }
+            body { 
+                margin: 0 !important; 
+                padding: 0 !important;
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             .certificate-container { 
                 margin: 0 !important; 
                 padding: 0 !important;
                 box-shadow: none !important;
+                width: 100vw !important;
+                height: 100vh !important;
             }
-            body { 
-                margin: 0.5in; 
-                background: white !important;
+            .certificate-border {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                background-size: 100% 100% !important;
+                background-image: url('{{ URL::asset("assets/borders/" . ($border_style ?? "0.jpg")) }}') !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            .certificate-content {
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 80% !important;
+                height: 80% !important;
+                padding: 40px !important;
+                background: transparent !important;
+            }
+            /* Fix text for printing - Portrait */
+            .certificate-header h1,
+            .certificate-header p,
+            .certificate-title h1,
+            .certificate-title h2,
+            .certificate-body p,
+            .certificate-body div,
+            .payment-box p,
+            .payment-box div {
+                font-size: 11pt !important;
+                line-height: 1.3 !important;
+                transform: none !important;
+                letter-spacing: normal !important;
+                word-spacing: normal !important;
+                font-family: 'Times New Roman', Georgia, serif !important;
+            }
+            .certificate-header h1 {
+                font-size: 13pt !important;
+                font-weight: bold !important;
+            }
+            .certificate-header p {
+                font-size: 11pt !important;
+                font-weight: 600 !important;
+            }
+            .certificate-title h1 {
+                font-size: 15pt !important;
+                font-weight: bold !important;
+            }
+            .certificate-title h2 {
+                font-size: 13pt !important;
+                font-weight: bold !important;
+            }
+        }
+        
+        /* Landscape print styles */
+        @media print and (orientation: landscape) {
+            .certificate-border {
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            .certificate-content {
+                width: 85% !important;
+                height: 85% !important;
+                padding: 50px !important;
+            }
+            /* Fix text for printing */
+            .certificate-header h1,
+            .certificate-header p,
+            .certificate-title h1,
+            .certificate-title h2,
+            .certificate-body p,
+            .certificate-body div,
+            .payment-box p,
+            .payment-box div {
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
+                transform: none !important;
+                letter-spacing: normal !important;
+                word-spacing: normal !important;
+            }
+            .certificate-header h1 {
+                font-size: 14pt !important;
+                font-weight: bold !important;
+            }
+            .certificate-header p {
+                font-size: 12pt !important;
+                font-weight: 600 !important;
+            }
+            .certificate-title h1 {
+                font-size: 16pt !important;
+                font-weight: bold !important;
+            }
+            .certificate-title h2 {
+                font-size: 14pt !important;
+                font-weight: bold !important;
             }
         }
         .certificate-border {
-            border: 3px solid #000080;
-            padding: 40px;
+            padding: 80px 60px;
             background: white;
             position: relative;
-            box-shadow: 0 0 20px rgba(0, 0, 128, 0.1);
-            background-image: 
-                radial-gradient(circle at 20% 20%, rgba(0, 0, 128, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 0, 128, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 0, 128, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(0, 0, 128, 0.03) 0%, transparent 50%);
-        }
-        .certificate-border::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            border: 1px solid #000080;
-            opacity: 0.3;
-        }
-        .certificate-border::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10,10 Q50,5 90,10 Q95,50 90,90 Q50,95 10,90 Q5,50 10,10' stroke='%23000080' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10,10 Q50,5 90,10 Q95,50 90,90 Q50,95 10,90 Q5,50 10,10' stroke='%23000080' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
-            background-size: 150px 150px, 150px 150px;
-            background-position: top left, bottom right;
+            background-image: url('{{ URL::asset("assets/borders/" . ($border_style ?? "0.jpg")) }}');
+            background-size: 100% 100%;
+            background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.15;
-            z-index: 1;
+            min-height: 842px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .certificate-content {
+            position: relative;
+            z-index: 10;
+            background: transparent;
+            padding: 40px;
+            margin: 0;
+            border-radius: 0;
         }
         .certificate-header {
             color: #000000;
@@ -946,7 +1034,7 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
-    <div class="certificate-container w-full max-w-5xl">
+    <div class="w-full max-w-5xl">
         <!-- Print Controls -->
         <div class="no-print mb-6 text-center">
             <div class="mb-4">
@@ -958,476 +1046,9 @@
                     <i class="fas fa-file-image mr-2"></i>Landscape
                 </button>
             </div>
-            <div class="mb-4">
-                <label class="text-sm font-medium text-gray-700 mr-4 block mb-3">Certificate Design:</label>
-                <div class="flex justify-center">
-                    <button onclick="toggleDesignPanel()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg flex items-center">
-                        <i class="fas fa-palette mr-2"></i>
-                        <span id="current-design-text">Elegant Design</span>
-                        <i class="fas fa-chevron-down ml-2"></i>
-                    </button>
-                </div>
-                
-                <!-- Design Panel (Hidden by default) -->
-                <div id="design-panel" class="hidden mt-4 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 max-w-4xl mx-auto">
-                    <div class="grid grid-cols-4 gap-4 mb-4">
-                        <!-- Clean Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-blue-400 transition-all" onclick="selectDesign('clean')">
-                            <div class="w-full h-20 bg-white border-2 border-blue-800 rounded mb-2 flex items-center justify-center">
-                                <div class="text-xs text-center">
-                                    <div class="w-6 h-6 bg-blue-800 rounded-full mx-auto mb-1"></div>
-                                    <div class="text-blue-800 font-bold text-xs">Clean</div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Clean Design</p>
-                        </div>
-                        
-                        <!-- Elegant Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-indigo-400 transition-all" onclick="selectDesign('elegant')">
-                            <div class="w-full h-20 bg-white border-2 border-blue-800 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 w-3 h-3 bg-blue-200 rounded-full opacity-30"></div>
-                                <div class="absolute top-0 right-0 w-3 h-3 bg-blue-200 rounded-full opacity-30"></div>
-                                <div class="absolute bottom-0 left-0 w-3 h-3 bg-blue-200 rounded-full opacity-30"></div>
-                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-blue-200 rounded-full opacity-30"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-blue-800 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-blue-800 font-bold text-xs">Elegant</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Elegant Design</p>
-                        </div>
-                        
-                        <!-- Classic Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-amber-400 transition-all" onclick="selectDesign('classic')">
-                            <div class="w-full h-20 bg-amber-50 border-2 border-amber-700 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0" style="background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(139, 69, 19, 0.1) 2px, rgba(139, 69, 19, 0.1) 4px);"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-amber-700 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-amber-800 font-bold text-xs">Classic</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Classic Design</p>
-                        </div>
-                        
-                        <!-- Modern Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-teal-400 transition-all" onclick="selectDesign('modern')">
-                            <div class="w-full h-20 bg-gradient-to-br from-teal-50 to-blue-50 border-2 border-teal-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-blue-400"></div>
-                                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-teal-400"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-gradient-to-br from-teal-500 to-blue-500 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-teal-700 font-bold text-xs">Modern</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Modern Design</p>
-                        </div>
-                        
-                        <!-- Royal Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-purple-400 transition-all" onclick="selectDesign('royal')">
-                            <div class="w-full h-20 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-700 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0 opacity-10">
-                                    <div class="absolute top-1 left-1 w-4 h-4 border-2 border-purple-600 rounded-full"></div>
-                                    <div class="absolute top-1 right-1 w-4 h-4 border-2 border-purple-600 rounded-full"></div>
-                                    <div class="absolute bottom-1 left-1 w-4 h-4 border-2 border-purple-600 rounded-full"></div>
-                                    <div class="absolute bottom-1 right-1 w-4 h-4 border-2 border-purple-600 rounded-full"></div>
-                                </div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-gradient-to-br from-purple-600 to-pink-500 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-purple-700 font-bold text-xs">Royal</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Royal Design</p>
-                        </div>
-                        
-                        <!-- Minimal Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-gray-400 transition-all" onclick="selectDesign('minimal')">
-                            <div class="w-full h-20 bg-gray-50 border border-gray-400 rounded mb-2 flex items-center justify-center">
-                                <div class="text-xs text-center">
-                                    <div class="w-6 h-6 bg-gray-300 rounded mx-auto mb-1"></div>
-                                    <div class="text-gray-600 font-bold text-xs">Minimal</div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Minimal Design</p>
-                        </div>
-                        
-                        <!-- Side Border Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-green-400 transition-all" onclick="selectDesign('sideborder')">
-                            <div class="w-full h-20 bg-white border-2 border-green-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 bottom-0 w-2 bg-green-200"></div>
-                                <div class="absolute top-0 right-0 bottom-0 w-2 bg-green-200"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-green-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-green-700 font-bold text-xs">Side</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Side Border</p>
-                        </div>
-                        
-                        <!-- Corner Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-red-400 transition-all" onclick="selectDesign('corner')">
-                            <div class="w-full h-20 bg-white border-2 border-red-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-400"></div>
-                                <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-red-400"></div>
-                                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-red-400"></div>
-                                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-400"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-red-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-red-700 font-bold text-xs">Corner</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Corner Design</p>
-                        </div>
-                        
-                        <!-- Frame Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-indigo-400 transition-all" onclick="selectDesign('frame')">
-                            <div class="w-full h-20 bg-white border-2 border-indigo-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-1 border border-indigo-300 rounded"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-indigo-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-indigo-700 font-bold text-xs">Frame</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Frame Design</p>
-                        </div>
-                        
-                        <!-- Ornamental Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-yellow-400 transition-all" onclick="selectDesign('ornamental')">
-                            <div class="w-full h-20 bg-white border-2 border-yellow-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200"></div>
-                                <div class="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-yellow-200 via-yellow-400 to-yellow-200"></div>
-                                <div class="absolute top-0 right-0 bottom-0 w-1 bg-gradient-to-b from-yellow-200 via-yellow-400 to-yellow-200"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-yellow-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-yellow-700 font-bold text-xs">Ornament</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Ornamental</p>
-                        </div>
-                        
-                        <!-- Vintage Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-orange-400 transition-all" onclick="selectDesign('vintage')">
-                            <div class="w-full h-20 bg-orange-50 border-2 border-orange-700 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0 border-2 border-double border-orange-300"></div>
-                                <div class="absolute inset-1 border border-dotted border-orange-400"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-orange-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-orange-700 font-bold text-xs">Vintage</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Vintage Design</p>
-                        </div>
-                        
-                        <!-- Elegant Border Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-pink-400 transition-all" onclick="selectDesign('elegantborder')">
-                            <div class="w-full h-20 bg-white border-2 border-pink-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0 border border-pink-200 rounded"></div>
-                                <div class="absolute inset-0.5 border border-pink-300 rounded"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-pink-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-pink-700 font-bold text-xs">Elegant</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Elegant Border</p>
-                        </div>
-                        
-                        <!-- Stripes Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-blue-400 transition-all" onclick="selectDesign('stripes')">
-                            <div class="w-full h-20 bg-white border-2 border-blue-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0" style="background: repeating-linear-gradient(45deg, #DBEAFE, #DBEAFE 2px, white 2px, white 6px);"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-blue-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-blue-700 font-bold text-xs">Stripes</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Stripes Design</p>
-                        </div>
-                        
-                        <!-- Spots Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-green-400 transition-all" onclick="selectDesign('spots')">
-                            <div class="w-full h-20 bg-green-50 border-2 border-green-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0">
-                                    <div class="absolute top-1 left-1 w-2 h-2 bg-green-300 rounded-full opacity-50"></div>
-                                    <div class="absolute top-1 right-1 w-2 h-2 bg-green-300 rounded-full opacity-50"></div>
-                                    <div class="absolute bottom-1 left-1 w-2 h-2 bg-green-300 rounded-full opacity-50"></div>
-                                    <div class="absolute bottom-1 right-1 w-2 h-2 bg-green-300 rounded-full opacity-50"></div>
-                                </div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-green-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-green-700 font-bold text-xs">Spots</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Spots Design</p>
-                        </div>
-                        
-                        <!-- Dots Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-purple-400 transition-all" onclick="selectDesign('dots')">
-                            <div class="w-full h-20 bg-purple-50 border-2 border-purple-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0" style="background-image: radial-gradient(circle, #9333EA 1px, transparent 1px); background-size: 6px 6px; opacity: 0.2;"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-purple-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-purple-700 font-bold text-xs">Dots</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Dots Design</p>
-                        </div>
-                        
-                        <!-- Chevron Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-red-400 transition-all" onclick="selectDesign('chevron')">
-                            <div class="w-full h-20 bg-white border-2 border-red-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0" style="background-image: linear-gradient(45deg, #FEE2E2 25%, transparent 25%, transparent 75%, #FEE2E2 75%, #FEE2E2), linear-gradient(45deg, #FEE2E2 25%, transparent 25%, transparent 75%, #FEE2E2 75%, #FEE2E2); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-red-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-red-700 font-bold text-xs">Chevron</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Chevron Design</p>
-                        </div>
-                        
-                        <!-- Ribbon Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-blue-400 transition-all" onclick="selectDesign('ribbon')">
-                            <div class="w-full h-20 bg-white border-2 border-blue-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200"></div>
-                                <div class="absolute top-3 left-0 right-0 h-1 bg-blue-300"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200"></div>
-                                <div class="absolute bottom-3 left-0 right-0 h-1 bg-blue-300"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-blue-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-blue-700 font-bold text-xs">Ribbon</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Ribbon Design</p>
-                        </div>
-                        
-                        <!-- Medallion Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-yellow-400 transition-all" onclick="selectDesign('medallion')">
-                            <div class="w-full h-20 bg-yellow-50 border-2 border-yellow-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="w-12 h-12 border-4 border-yellow-400 rounded-full"></div>
-                                    <div class="w-8 h-8 border-2 border-yellow-500 rounded-full absolute"></div>
-                                    <div class="w-4 h-4 bg-yellow-600 rounded-full absolute"></div>
-                                </div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center relative z-10">
-                                        <div class="w-6 h-6 bg-yellow-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-yellow-700 font-bold text-xs">Medallion</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Medallion Design</p>
-                        </div>
-                        
-                        <!-- Laurel Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-green-400 transition-all" onclick="selectDesign('laurel')">
-                            <div class="w-full h-20 bg-green-50 border-2 border-green-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-2 left-2 w-6 h-6 border-2 border-green-400 rounded-full"></div>
-                                <div class="absolute top-2 right-2 w-6 h-6 border-2 border-green-400 rounded-full"></div>
-                                <div class="absolute bottom-2 left-2 w-6 h-6 border-2 border-green-400 rounded-full"></div>
-                                <div class="absolute bottom-2 right-2 w-6 h-6 border-2 border-green-400 rounded-full"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-green-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-green-700 font-bold text-xs">Laurel</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Laurel Design</p>
-                        </div>
-                        
-                        <!-- Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-cyan-400 transition-all" onclick="selectDesign('wave')">
-                            <div class="w-full h-20 bg-white border-2 border-cyan-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-4 bg-gradient-to-r from-cyan-200 via-cyan-400 to-cyan-200" style="clip-path: ellipse(100% 100% at 50% 0%);"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-r from-cyan-200 via-cyan-400 to-cyan-200" style="clip-path: ellipse(100% 100% at 50% 100%); transform: rotate(180deg);"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-cyan-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-cyan-700 font-bold text-xs">Wave</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Wave Design</p>
-                        </div>
-                        
-                        <!-- Star Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-purple-400 transition-all" onclick="selectDesign('star')">
-                            <div class="w-full h-20 bg-purple-50 border-2 border-purple-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-2 left-2 text-purple-300">★</div>
-                                <div class="absolute top-2 right-2 text-purple-300">★</div>
-                                <div class="absolute bottom-2 left-2 text-purple-300">★</div>
-                                <div class="absolute bottom-2 right-2 text-purple-300">★</div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-purple-200 text-2xl">★</div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-purple-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-purple-700 font-bold text-xs">Star</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Star Design</p>
-                        </div>
-                        
-                        <!-- Seal Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-red-400 transition-all" onclick="selectDesign('seal')">
-                            <div class="w-full h-20 bg-red-50 border-2 border-red-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 border-2 border-red-400 rounded-full flex items-center justify-center">
-                                    <div class="w-6 h-6 border border-red-500 rounded-full flex items-center justify-center">
-                                        <div class="w-3 h-3 bg-red-600 rounded-full"></div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-red-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-red-700 font-bold text-xs">Seal</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Seal Design</p>
-                        </div>
-                        
-                        <!-- Emblem Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-indigo-400 transition-all" onclick="selectDesign('emblem')">
-                            <div class="w-full h-20 bg-indigo-50 border-2 border-indigo-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border-2 border-indigo-400 rotate-45"></div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 border border-indigo-500 rotate-45"></div>
-                                <div class="flex items-center justify-center h-full relative">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-indigo-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-indigo-700 font-bold text-xs">Emblem</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Emblem Design</p>
-                        </div>
-                        
-                        <!-- Ocean Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-blue-400 transition-all" onclick="selectDesign('oceanwave')">
-                            <div class="w-full h-20 bg-blue-50 border-2 border-blue-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-blue-200 via-blue-300 to-transparent"></div>
-                                <div class="absolute top-2 left-0 right-0 h-4 bg-gradient-to-b from-blue-100 via-blue-200 to-transparent" style="clip-path: polygon(0 50%, 25% 0%, 50% 50%, 75% 0%, 100% 50%, 100% 100%, 0% 100%);"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-blue-200 via-blue-300 to-transparent"></div>
-                                <div class="absolute bottom-2 left-0 right-0 h-4 bg-gradient-to-t from-blue-100 via-blue-200 to-transparent" style="clip-path: polygon(0 0%, 25% 50%, 50% 0%, 75% 50%, 100% 0%, 100% 100%, 0% 100%);"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-blue-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-blue-700 font-bold text-xs">Ocean</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Ocean Wave</p>
-                        </div>
-                        
-                        <!-- Ripple Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-teal-400 transition-all" onclick="selectDesign('ripplewave')">
-                            <div class="w-full h-20 bg-teal-50 border-2 border-teal-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-2 border-teal-300 rounded-full opacity-50"></div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-2 border-teal-400 rounded-full opacity-60"></div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border-2 border-teal-500 rounded-full opacity-70"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-teal-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-teal-700 font-bold text-xs">Ripple</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Ripple Wave</p>
-                        </div>
-                        
-                        <!-- Zigzag Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-purple-400 transition-all" onclick="selectDesign('zigzagwave')">
-                            <div class="w-full h-20 bg-purple-50 border-2 border-purple-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-4 bg-purple-200" style="clip-path: polygon(0 0%, 10% 100%, 20% 0%, 30% 100%, 40% 0%, 50% 100%, 60% 0%, 70% 100%, 80% 0%, 90% 100%, 100% 0%, 100% 100%, 0% 100%);"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-4 bg-purple-200" style="clip-path: polygon(0 100%, 10% 0%, 20% 100%, 30% 0%, 40% 100%, 50% 0%, 60% 100%, 70% 0%, 80% 100%, 90% 0%, 100% 100%, 100% 0%, 0% 0%);"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-purple-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-purple-700 font-bold text-xs">Zigzag</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Zigzag Wave</p>
-                        </div>
-                        
-                        <!-- Flow Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-green-400 transition-all" onclick="selectDesign('flowwave')">
-                            <div class="w-full h-20 bg-green-50 border-2 border-green-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-green-200 to-transparent" style="clip-path: ellipse(100% 100% at 50% 0%);"></div>
-                                <div class="absolute top-3 left-0 right-0 h-6 bg-gradient-to-b from-green-100 to-transparent" style="clip-path: ellipse(80% 100% at 50% 0%);"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-green-200 to-transparent" style="clip-path: ellipse(100% 100% at 50% 100%);"></div>
-                                <div class="absolute bottom-3 left-0 right-0 h-6 bg-gradient-to-t from-green-100 to-transparent" style="clip-path: ellipse(80% 100% at 50% 100%);"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-green-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-green-700 font-bold text-xs">Flow</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Flow Wave</p>
-                        </div>
-                        
-                        <!-- Spiral Wave Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-orange-400 transition-all" onclick="selectDesign('spiralwave')">
-                            <div class="w-full h-20 bg-orange-50 border-2 border-orange-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 border-3 border-orange-300 rounded-full opacity-40"></div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 border-2 border-orange-400 rounded-full opacity-60" style="border-style: dashed;"></div>
-                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 border border-orange-500 rounded-full opacity-80" style="border-style: dotted;"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-orange-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-orange-700 font-bold text-xs">Spiral</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Spiral Wave</p>
-                        </div>
-                        
-                        <!-- Wave Border Design -->
-                        <div class="text-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg border-2 border-transparent hover:border-cyan-400 transition-all" onclick="selectDesign('waveborder')">
-                            <div class="w-full h-20 bg-cyan-50 border-2 border-cyan-600 rounded mb-2 relative overflow-hidden">
-                                <div class="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-cyan-200 to-transparent" style="clip-path: polygon(0 0%, 5% 50%, 10% 0%, 15% 50%, 20% 0%, 25% 50%, 30% 0%, 35% 50%, 40% 0%, 45% 50%, 50% 0%, 55% 50%, 60% 0%, 65% 50%, 70% 0%, 75% 50%, 80% 0%, 85% 50%, 90% 0%, 95% 50%, 100% 0%, 100% 100%, 0% 100%);"></div>
-                                <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-cyan-200 to-transparent" style="clip-path: polygon(0 100%, 5% 50%, 10% 100%, 15% 50%, 20% 100%, 25% 50%, 30% 100%, 35% 50%, 40% 100%, 45% 50%, 50% 100%, 55% 50%, 60% 100%, 65% 50%, 70% 100%, 75% 50%, 80% 100%, 85% 50%, 90% 100%, 95% 50%, 100% 100%, 100% 0%, 0% 0%);"></div>
-                                <div class="flex items-center justify-center h-full">
-                                    <div class="text-xs text-center">
-                                        <div class="w-6 h-6 bg-cyan-600 rounded-full mx-auto mb-1"></div>
-                                        <div class="text-cyan-700 font-bold text-xs">Wave Border</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-xs font-medium">Wave Border</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
+               
+            
             <div>
                 <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg mr-4">
                     <i class="fas fa-print mr-2"></i>Print Certificate
@@ -1439,21 +1060,23 @@
         </div>
 
         <!-- Certificate -->
-        <div id="certificate-border" class="bg-clean">
-            <div class="relative z-10">
-                <div class="relative z-20">
+        <div class="certificate-border">
+            <div class="certificate-content">
                 <!-- Header -->
                 <div class="mb-8">
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-center relative">
                         <!-- Logo on Left -->
-                        <div class="flex items-center">
-                            <img src="{{ URL::asset('assets/lgu.png') }}" alt="LGU Logo" class="h-20 w-20 mr-6">
-                            <div class="certificate-header">
-                                <h1 class="text-xl font-bold">Republic of the Philippines</h1>
-                                <p class="text-lg font-semibold">Province of Southern Leyte</p>
-                                <p class="text-base font-bold">MUNICIPALITY OF SOGOD</p>
-                            </div>
+                        <img src="{{ URL::asset('assets/lgu.png') }}" alt="LGU Logo" class="h-20 w-20 mr-8">
+                        
+                        <!-- Centered Text -->
+                        <div class="certificate-header text-center">
+                            <h1 class="text-xl font-bold">Republic of the Philippines</h1>
+                            <p class="text-lg font-semibold">Province of Southern Leyte</p>
+                            <p class="text-base font-bold">MUNICIPALITY OF SOGOD</p>
                         </div>
+                        
+                        <!-- Bagong Pilipinas Logo on Right -->
+                        <img src="{{ URL::asset('assets/h.jpg') }}" alt="Bagong Pilipinas Logo" class="h-20 w-20 ml-8">
                     </div>
                 </div>
 
@@ -1465,25 +1088,25 @@
 
                 <!-- Certificate Content -->
                 <div class="mb-8 certificate-content">
-                    <p class="mb-4">TO WHOM IT MAY CONCERN:</p>
+                    <p class="text-xl font-bold text-gray-900 mb-6 text-left">TO WHOM IT MAY CONCERN:</p>
                     
-                    <p class="leading-relaxed mb-4">
+                    <p class="text-lg leading-relaxed text-gray-900 mb-6">
                         THIS IS TO CERTIFY that the Business Permit of 
-                        <span class="font-bold uppercase border-b-2 border-gray-800 pb-1 inline-block min-w-[200px] text-center">{{ $owner_name ?? '_________' }}</span> 
+                        <span class="font-bold underline">{{ $owner_name ?? '_________' }}</span> 
                         located at 
-                        <span class="font-bold uppercase border-b-2 border-gray-800 pb-1 inline-block min-w-[300px] text-center">{{ $address ?? '_________' }}</span>, Sogod, Southern Leyte has already a Land Use Certification issued by this office in support of his/her new application of Business Permit.
+                        <span class="font-bold underline">{{ $address ?? '_________' }}</span>, Sogod, Southern Leyte has already a Land Use Certification issued by this office in support of his/her new application of Business Permit.
                     </p>
 
-                    <p class="mb-4">
-                        THIS CERTIFICATION IS HEREBY ISSUED for whatever legal purpose it may serve.
+                    <p class="text-lg leading-relaxed text-gray-900 mb-6">
+                        <span class="font-bold">THIS CERTIFICATION IS HEREBY ISSUED</span> for whatever legal purpose it may serve.
                     </p>
 
-                    <p>
-                        DONE this 
-                        <span class="font-bold border-b-2 border-gray-800 pb-1 inline-block min-w-[60px] text-center">{{ $day }}</span> 
+                    <p class="text-lg text-gray-900 mb-12">
+                        <span class="font-bold">DONE</span> this 
+                        <span class="font-bold underline">{{ $day }}</span> 
                         day of 
-                        <span class="font-bold border-b-2 border-gray-800 pb-1 inline-block min-w-[120px] text-center">{{ $month }}</span>, 
-                        <span class="font-bold border-b-2 border-gray-800 pb-1 inline-block min-w-[80px] text-center">{{ $year }}</span> 
+                        <span class="font-bold underline">{{ $month }}</span>, 
+                        <span class="font-bold underline">{{ $year }}</span> 
                         at Sogod, Southern Leyte, Philippines.
                     </p>
                 </div>
@@ -1508,107 +1131,7 @@
     </div>
 
     <script>
-        function setPortrait() {
-            // Remove any existing page style
-            const existingStyle = document.getElementById('page-style');
-            if (existingStyle) {
-                existingStyle.remove();
-            }
-            
-            // Add portrait style
-            const portraitStyle = document.createElement('style');
-            portraitStyle.id = 'page-style';
-            portraitStyle.innerHTML = '@media print { @page { size: portrait; margin: 0.5in; } }';
-            document.head.appendChild(portraitStyle);
-            
-            // Update button states
-            document.querySelector('button[onclick="setPortrait()"]').classList.add('bg-gray-600');
-            document.querySelector('button[onclick="setPortrait()"]').classList.remove('bg-gray-500');
-            document.querySelector('button[onclick="setLandscape()"]').classList.add('bg-green-600');
-            document.querySelector('button[onclick="setLandscape()"]').classList.remove('bg-green-700');
-        }
-
-        function setLandscape() {
-            // Remove any existing page style
-            const existingStyle = document.getElementById('page-style');
-            if (existingStyle) {
-                existingStyle.remove();
-            }
-            
-            // Add landscape style
-            const landscapeStyle = document.createElement('style');
-            landscapeStyle.id = 'page-style';
-            landscapeStyle.innerHTML = '@media print { @page { size: landscape; margin: 0.5in; } }';
-            document.head.appendChild(landscapeStyle);
-            
-            // Update button states
-            document.querySelector('button[onclick="setLandscape()"]').classList.add('bg-green-700');
-            document.querySelector('button[onclick="setLandscape()"]').classList.remove('bg-green-600');
-            document.querySelector('button[onclick="setPortrait()"]').classList.add('bg-gray-500');
-            document.querySelector('button[onclick="setPortrait()"]').classList.remove('bg-gray-600');
-        }
-
-        function setBackground(type) {
-            const certificate = document.getElementById('certificate-border');
-            
-            // Remove all background classes
-            certificate.classList.remove('bg-clean', 'bg-elegant', 'bg-classic', 'bg-modern', 'bg-royal', 'bg-minimal', 'bg-sideborder', 'bg-corner', 'bg-frame', 'bg-ornamental', 'bg-vintage', 'bg-elegantborder', 'bg-stripes', 'bg-spots', 'bg-dots', 'bg-chevron', 'bg-ribbon', 'bg-medallion', 'bg-laurel', 'bg-wave', 'bg-star', 'bg-seal', 'bg-emblem', 'bg-oceanwave', 'bg-ripplewave', 'bg-zigzagwave', 'bg-flowwave', 'bg-spiralwave', 'bg-waveborder');
-            
-            // Add new background class
-            certificate.classList.add('bg-' + type);
-        }
-
-        function toggleDesignPanel() {
-            const panel = document.getElementById('design-panel');
-            panel.classList.toggle('hidden');
-        }
-
-        function selectDesign(type) {
-            // Apply the design
-            setBackground(type);
-            
-            // Update the button text
-            const designNames = {
-                clean: 'Clean Design',
-                elegant: 'Elegant Design',
-                classic: 'Classic Design',
-                modern: 'Modern Design',
-                royal: 'Royal Design',
-                minimal: 'Minimal Design',
-                sideborder: 'Side Border',
-                corner: 'Corner Design',
-                frame: 'Frame Design',
-                ornamental: 'Ornamental Design',
-                vintage: 'Vintage Design',
-                elegantborder: 'Elegant Border',
-                stripes: 'Stripes Design',
-                spots: 'Spots Design',
-                dots: 'Dots Design',
-                chevron: 'Chevron Design',
-                ribbon: 'Ribbon Design',
-                medallion: 'Medallion Design',
-                laurel: 'Laurel Design',
-                wave: 'Wave Design',
-                star: 'Star Design',
-                seal: 'Seal Design',
-                emblem: 'Emblem Design',
-                oceanwave: 'Ocean Wave',
-                ripplewave: 'Ripple Wave',
-                zigzagwave: 'Zigzag Wave',
-                flowwave: 'Flow Wave',
-                spiralwave: 'Spiral Wave',
-                waveborder: 'Wave Border'
-            };
-            
-            document.getElementById('current-design-text').textContent = designNames[type];
-            
-            // Hide the panel
-            document.getElementById('design-panel').classList.add('hidden');
-        }
-
-        // Set landscape and elegant as default
-        setLandscape();
-        setBackground('elegant');
+        // Certificate is ready for printing
     </script>
 </body>
 </html>

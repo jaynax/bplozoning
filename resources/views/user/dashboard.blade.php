@@ -86,8 +86,8 @@
                         <i class="fas fa-user text-white"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-sm">{{ Auth::user()->name }}</p>
-                        <p class="text-xs text-gray-300">{{ Auth::user()->email }}</p>
+                        <p class="font-semibold text-black text-sm">{{ Auth::user()->name }}</p>
+                        <p class="text-xs text-black">{{ Auth::user()->email }}</p>
                     </div>
                 </div>
             </div>

@@ -14,6 +14,7 @@ class Certificate extends Model
         'certificate_type',
         'owner_name',
         'address',
+        'border_style',
         'day',
         'month',
         'year',

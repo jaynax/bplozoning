@@ -3,29 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Residential Zoning Certificate | Municipality of Sogod</title>
+    <title>Business Zoning Certificate | Municipality of Sogod</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @media print {
             .no-print { display: none !important; }
-            .certificate-container { 
-                margin: 0 !important; 
-                padding: 0 !important;
-                box-shadow: none !important;
-            }
             body { 
                 margin: 0 !important; 
                 padding: 0 !important;
                 background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .certificate-container { 
+                margin: 0 !important; 
+                padding: 0 !important;
+                box-shadow: none !important;
+                width: 100vw !important;
+                height: 100vh !important;
             }
             .certificate-border {
                 margin: 0 !important;
-                padding: 60px 40px !important;
+                padding: 0 !important;
                 box-shadow: none !important;
                 background-size: 100% 100% !important;
+                background-image: url('{{ URL::asset("assets/borders/" . ($border_style ?? "0.jpg")) }}') !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
             }
             .certificate-content {
-                padding: 30px !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 80% !important;
+                height: 80% !important;
+                padding: 40px !important;
+                background: transparent !important;
             }
         }
         .certificate-border {
@@ -47,26 +68,32 @@
             margin: 0;
             border-radius: 0;
         }
+        .official-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .official-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            vertical-align: top;
+        }
+        .label-cell {
+            background-color: #f3f4f6;
+            font-weight: bold;
+            width: 25%;
+        }
         .payment-box {
+            background-color: #dcfce7;
             border: 2px solid #16a34a;
-            background: rgba(240, 253, 244, 0.9);
-            padding: 15px;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 2rem;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
-    <div class="certificate-container w-full max-w-5xl">
-        <!-- Print Controls -->
-        <div class="no-print mb-6 text-center">
-            <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg mr-4">
-                <i class="fas fa-print mr-2"></i>Print Certificate
-            </button>
-            <a href="{{ route('certificate.residential.form') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Form
-            </a>
-        </div>
-
-        <!-- Certificate -->
+<body>
+    <div class="certificate-container">
         <div class="certificate-border">
             <div class="certificate-content">
                 <!-- Header -->
@@ -92,7 +119,7 @@
 
                 <!-- Certificate Title -->
                 <div class="text-center mb-8">
-                    <h2 class="text-4xl font-bold text-gray-900 tracking-widest">C E R T I F I C A T I O N</h2>
+                    <h2 class="text-3xl font-bold text-gray-900 tracking-widest">BUSINESS ZONING CERTIFICATE</h2>
                 </div>
 
                 <!-- Certificate Content -->
@@ -101,17 +128,17 @@
                     
                     <p class="text-lg leading-relaxed text-gray-900 mb-6">
                         THIS IS TO CERTIFY that the proposed 
-                        <span class="font-bold underline">{{ $property_type ?? 'RESIDENTIAL LOT' }}</span> (
-                        <span class="font-bold underline">{{ $occupancy_type ?? 'RENTAL' }}</span>) of 
-                        <span class="font-bold underline">{{ $owner_name ?? 'PROPERTY OWNER' }}</span>
+                        <span class="font-bold underline">{{ $property_type ?? 'BUSINESS ESTABLISHMENT' }}</span> (
+                        <span class="font-bold underline">{{ $occupancy_type ?? 'COMMERCIAL' }}</span>) of 
+                        <span class="font-bold underline">{{ $owner_name ?? 'BUSINESS OWNER' }}</span>
                         located at 
-                        <span class="font-bold underline">{{ $address ?? 'PROPERTY ADDRESS' }}</span>, Sogod, Southern Leyte and identified as Tax Dec No. 
+                        <span class="font-bold underline">{{ $address ?? 'BUSINESS ADDRESS' }}</span>, Sogod, Southern Leyte and identified as Tax Dec No. 
                         <span class="font-bold underline">{{ $tax_dec_no ?? '_________' }}</span> with a Lot No. 
                         <span class="font-bold underline">{{ $lot_no ?? '_________' }}</span> is within the as per Zoning Ordinance of this municipality.
                     </p>
 
                     <p class="text-lg leading-relaxed text-gray-900 mb-6">
-                        <span class="font-bold">THIS IS TO CERTIFY FURTHER</span> that the above mentioned site is conforms the existing Zoning Plan of the Municipality.
+                        <span class="font-bold">THIS IS TO CERTIFY FURTHER</span> that the above mentioned site is conforms to the existing Zoning Plan of the Municipality.
                     </p>
 
                     <p class="text-lg leading-relaxed text-gray-900 mb-12">
@@ -139,20 +166,20 @@
                         </div>
                     </div>
 
-                    <div class="bg-green-100 p-4 rounded-lg shadow-inner text-green-800 text-sm w-5/12 mb-4">
-                        <p>Paid under O.R. No. : <span class="font-semibold">{{ $or_no ?? '_________' }}</span></p>
-                        <p>Amount Paid : <span class="font-semibold">{{ $amount_paid ?? '_________' }}</span></p>
-                        <p>Date Issued : <span class="font-semibold">{{ $date_issued ?? '_________' }}</span></p>
-                        <p>Valid Until : <span class="font-semibold">{{ $valid_until ?? '_________' }}</span></p>
-                        <p class="mt-2 font-bold text-center">DOCUMENTARY STAMP TAX PAID</p>
-                        <div class="mt-3 flex justify-between text-xs">
-                            <p>GOR SERIAL NUMBER <span class="font-semibold">{{ $gor_serial_number ?? '_________' }}</span></p>
-                            <p>DATE OF PAYMENT <span class="font-semibold">{{ $date_of_payment ?? '_________' }}</span></p>
+                    <div class="payment-box">
+                        <p class="text-center font-bold text-green-800 mb-4">NOT VALID WITHOUT SEAL</p>
+                        <p class="mb-2"><strong>BZC NO. :</strong> <span class="font-semibold">{{ $bzc_no ?? '_________' }}</span></p>
+                        <p class="mb-2"><strong>OR NO. :</strong> <span class="font-semibold">{{ $or_no ?? '_________' }}</span></p>
+                        <p class="mb-2"><strong>Date Issued :</strong> <span class="font-semibold">{{ $date_of_issue ?? '_________' }}</span></p>
+                        <p class="mb-2"><strong>Amount :</strong> <span class="font-semibold">Php {{ $amount ?? '_________' }}</span></p>
+                        <p class="mt-4 font-bold text-center text-green-800">DOCUMENTARY STAMP TAX PAID</p>
+                        <div class="mt-3 flex justify-between text-sm">
+                            <p><strong>GOR SERIAL NUMBER</strong> <span class="font-semibold">{{ $gor_serial ?? '_________' }}</span></p>
+                            <p><strong>DATE OF PAYMENT</strong> <span class="font-semibold">{{ $date_payment ?? '_________' }}</span></p>
                         </div>
                     </div>
                 </div>
-
-                </div>
+            </div>
         </div>
     </div>
 </body>

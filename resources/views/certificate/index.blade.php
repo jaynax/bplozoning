@@ -28,10 +28,20 @@
                 <h1 class="text-3xl font-bold text-gray-900">My Certificates</h1>
                 <p class="mt-2 text-sm text-gray-600">View and manage all your generated certificates</p>
             </div>
-            <a href="{{ route('certificate.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 flex items-center">
-                <i class="fas fa-plus mr-2"></i>
-                Generate New Certificate
-            </a>
+            <div class="flex space-x-3">
+                <form id="bulkDeleteForm" action="{{ route('certificate.bulkDelete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete the selected certificates?')" class="hidden">
+                    @csrf
+                    <input type="hidden" name="certificate_ids" id="certificateIds">
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 flex items-center">
+                        <i class="fas fa-trash mr-2"></i>
+                        Delete Selected (<span id="selectedCount">0</span>)
+                    </button>
+                </form>
+                <a href="{{ route('certificate.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Generate New Certificate
+                </a>
+            </div>
         </div>
     </div>
         @if($certificates->count() > 0)
@@ -88,14 +98,25 @@
 
             <!-- Certificates Table -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Certificate List</h2>
+                    <div class="flex items-center space-x-4">
+                        <button id="selectAllBtn" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-check-square mr-1"></i> Select All
+                        </button>
+                        <button id="deselectAllBtn" class="text-sm text-gray-600 hover:text-gray-800 font-medium hidden">
+                            <i class="fas fa-square mr-1"></i> Deselect All
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="masterCheckbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Certificate Number
                                 </th>
@@ -119,6 +140,9 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($certificates as $certificate)
                                 <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <input type="checkbox" name="certificate_ids[]" value="{{ $certificate->id }}" class="certificate-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="text-sm font-medium text-gray-900">{{ $certificate->certificate_number }}</span>
                                     </td>
@@ -224,7 +248,8 @@
                     </div>
                 </div>
             </div>
-        @else
+        @endif
+        @if($certificates->count() == 0)
             <!-- Empty State -->
             <div class="text-center py-12">
                 <div class="mx-auto h-24 w-24 text-gray-400">
@@ -241,4 +266,93 @@
             </div>
         @endif
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const masterCheckbox = document.getElementById('masterCheckbox');
+    const certificateCheckboxes = document.querySelectorAll('.certificate-checkbox');
+    const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+    const certificateIdsInput = document.getElementById('certificateIds');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const deselectAllBtn = document.getElementById('deselectAllBtn');
+
+    function updateBulkDeleteButton() {
+        const selectedCheckboxes = document.querySelectorAll('.certificate-checkbox:checked');
+        const selectedCount = selectedCheckboxes.length;
+        
+        selectedCountSpan.textContent = selectedCount;
+        
+        if (selectedCount > 0) {
+            bulkDeleteForm.classList.remove('hidden');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+            certificateIdsInput.value = selectedIds.join(',');
+        } else {
+            bulkDeleteForm.classList.add('hidden');
+            certificateIdsInput.value = '';
+        }
+
+        // Update select/deselect buttons
+        if (selectedCount === certificateCheckboxes.length && selectedCount > 0) {
+            selectAllBtn.classList.add('hidden');
+            deselectAllBtn.classList.remove('hidden');
+        } else {
+            selectAllBtn.classList.remove('hidden');
+            deselectAllBtn.classList.add('hidden');
+        }
+    }
+
+    function updateMasterCheckbox() {
+        const totalCheckboxes = certificateCheckboxes.length;
+        const checkedCheckboxes = document.querySelectorAll('.certificate-checkbox:checked');
+        
+        if (checkedCheckboxes.length === 0) {
+            masterCheckbox.checked = false;
+            masterCheckbox.indeterminate = false;
+        } else if (checkedCheckboxes.length === totalCheckboxes) {
+            masterCheckbox.checked = true;
+            masterCheckbox.indeterminate = false;
+        } else {
+            masterCheckbox.checked = false;
+            masterCheckbox.indeterminate = true;
+        }
+    }
+
+    // Master checkbox functionality
+    masterCheckbox.addEventListener('change', function() {
+        certificateCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateBulkDeleteButton();
+    });
+
+    // Individual checkbox functionality
+    certificateCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateBulkDeleteButton();
+            updateMasterCheckbox();
+        });
+    });
+
+    // Select all button
+    selectAllBtn.addEventListener('click', function() {
+        certificateCheckboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        masterCheckbox.checked = true;
+        masterCheckbox.indeterminate = false;
+        updateBulkDeleteButton();
+    });
+
+    // Deselect all button
+    deselectAllBtn.addEventListener('click', function() {
+        certificateCheckboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        masterCheckbox.checked = false;
+        masterCheckbox.indeterminate = false;
+        updateBulkDeleteButton();
+    });
+});
+</script>
 @endsection

@@ -49,11 +49,212 @@ class CertificateController extends Controller
         return view('certificate.environmental-form');
     }
 
+    public function showLocationalClearanceForm()
+    {
+        return view('certificate.locational-clearance-form');
+    }
+
+    public function selectLocationalClearanceDesign()
+    {
+        return view('certificate.locational-clearance-design');
+    }
+
+    public function designSelected(Request $request)
+    {
+        $selectedDesign = $request->input('border_style', '0.jpg');
+        
+        // Redirect to the edit page with the selected design
+        return redirect()->route('certificate.locational-clearance.edit', ['border_style' => $selectedDesign]);
+    }
+
+    public function editLocationalClearance(Request $request)
+    {
+        // Get selected border style from request or use default
+        $borderStyle = $request->input('border_style', '0.jpg');
+        
+        // Return editable template with default values
+        $defaultData = [
+            'application_no' => '_________',
+            'date_of_receipt' => '_________',
+            'decision_no' => '_________',
+            'date_of_issue' => '_________',
+            'applicant_name' => '_________________________',
+            'business_name' => 'NONE',
+            'address' => '_________________________',
+            'project_address' => '_________________________',
+            'project_type' => '_________________________',
+            'area_location' => '_________________________',
+            'lc_no' => '_________',
+            'or_no' => '_________',
+            'amount' => '_________',
+            'doc_stamp_tax' => '_________',
+            'gor_serial' => '_________',
+            'date_payment' => '_________',
+            'border_style' => $borderStyle,
+            'certificate_type' => 'locational-clearance',
+            'day' => date('j'),
+            'month' => date('F'),
+            'year' => date('Y'),
+            'certificate_number' => Certificate::generateCertificateNumber(),
+            'user_id' => auth()->id(),
+        ];
+
+        return view('certificate.locational-clearance-edit', $defaultData);
+    }
+
+    public function autoSaveLocationalClearance(Request $request)
+    {
+        $validated = $request->validate([
+            'border_style' => 'nullable|string|max:255',
+            'application_no' => 'nullable|string|max:255',
+            'date_of_receipt' => 'nullable|string|max:255',
+            'decision_no' => 'nullable|string|max:255',
+            'date_of_issue' => 'nullable|string|max:255',
+            'applicant_name' => 'nullable|string|max:255',
+            'business_name' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'project_address' => 'nullable|string|max:255',
+            'project_type' => 'nullable|string|max:255',
+            'area_location' => 'nullable|string|max:255',
+            'lc_no' => 'nullable|string|max:255',
+            'or_no' => 'nullable|string|max:255',
+            'amount' => 'nullable|string|max:255',
+            'doc_stamp_tax' => 'nullable|string|max:255',
+            'gor_serial' => 'nullable|string|max:255',
+            'date_payment' => 'nullable|string|max:255',
+            'certificate_type' => 'required|string|max:255',
+        ]);
+
+        $validated['certificate_type'] = 'locational-clearance';
+        $validated['certificate_number'] = Certificate::generateCertificateNumber();
+        $validated['user_id'] = auth()->id();
+        
+        // Map applicant_name to owner_name for database consistency
+        $validated['owner_name'] = $validated['applicant_name'] ?? '_________________________';
+        
+        // Set default date values
+        $validated['day'] = date('j');
+        $validated['month'] = date('F');
+        $validated['year'] = date('Y');
+        
+        // Store all locational clearance specific fields in additional_data
+        $additionalData = [
+            'application_no' => $validated['application_no'] ?? '_________',
+            'date_of_receipt' => $validated['date_of_receipt'] ?? '_________',
+            'decision_no' => $validated['decision_no'] ?? '_________',
+            'date_of_issue' => $validated['date_of_issue'] ?? '_________',
+            'applicant_name' => $validated['applicant_name'] ?? '_________________________',
+            'business_name' => $validated['business_name'] ?? 'NONE',
+            'project_address' => $validated['project_address'] ?? '_________________________',
+            'project_type' => $validated['project_type'] ?? '_________________________',
+            'area_location' => $validated['area_location'] ?? '_________________________',
+            'lc_no' => $validated['lc_no'] ?? '_________',
+            'or_no' => $validated['or_no'] ?? '_________',
+            'amount' => $validated['amount'] ?? '_________',
+            'doc_stamp_tax' => $validated['doc_stamp_tax'] ?? '_________',
+            'gor_serial' => $validated['gor_serial'] ?? '_________',
+            'date_payment' => $validated['date_payment'] ?? '_________',
+            'border_style' => $validated['border_style'] ?? null,
+        ];
+        
+        // Remove fields that don't exist in main certificates table
+        unset($validated['application_no'], $validated['date_of_receipt'], $validated['decision_no'], 
+                $validated['date_of_issue'], $validated['applicant_name'], $validated['business_name'], 
+                $validated['project_address'], $validated['project_type'], $validated['area_location'], 
+                $validated['lc_no'], $validated['or_no'], $validated['amount'], $validated['doc_stamp_tax'], 
+                $validated['gor_serial'], $validated['date_payment'], $validated['border_style']);
+        
+        $validated['additional_data'] = $additionalData;
+
+        // Save certificate to database
+        $certificate = Certificate::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Certificate saved successfully',
+            'certificate_id' => $certificate->id,
+            'certificate_number' => $certificate->certificate_number
+        ]);
+    }
+
+    public function saveLocationalClearance(Request $request)
+    {
+        $validated = $request->validate([
+            'application_no' => 'required|string|max:255',
+            'date_of_receipt' => 'required|string|max:255',
+            'decision_no' => 'required|string|max:255',
+            'date_of_issue' => 'required|string|max:255',
+            'applicant_name' => 'required|string|max:255',
+            'business_name' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'project_address' => 'required|string|max:255',
+            'project_type' => 'required|string|max:255',
+            'area_location' => 'required|string|max:255',
+            'lc_no' => 'required|string|max:255',
+            'or_no' => 'required|string|max:255',
+            'amount' => 'required|string|max:255',
+            'doc_stamp_tax' => 'required|string|max:255',
+            'gor_serial' => 'required|string|max:255',
+            'date_payment' => 'required|string|max:255',
+            'border_style' => 'nullable|string|max:255',
+        ]);
+
+        $validated['certificate_type'] = 'locational-clearance';
+        $validated['certificate_number'] = Certificate::generateCertificateNumber();
+        $validated['user_id'] = auth()->id();
+        
+        // Map applicant_name to owner_name for database consistency
+        $validated['owner_name'] = $validated['applicant_name'];
+        
+        // Set default date values
+        $validated['day'] = date('j');
+        $validated['month'] = date('F');
+        $validated['year'] = date('Y');
+        
+        // Store all locational clearance specific fields in additional_data
+        $additionalData = [
+            'application_no' => $validated['application_no'],
+            'date_of_receipt' => $validated['date_of_receipt'],
+            'decision_no' => $validated['decision_no'],
+            'date_of_issue' => $validated['date_of_issue'],
+            'applicant_name' => $validated['applicant_name'],
+            'business_name' => $validated['business_name'] ?? null,
+            'project_address' => $validated['project_address'],
+            'project_type' => $validated['project_type'],
+            'area_location' => $validated['area_location'],
+            'lc_no' => $validated['lc_no'],
+            'or_no' => $validated['or_no'],
+            'amount' => $validated['amount'],
+            'doc_stamp_tax' => $validated['doc_stamp_tax'],
+            'gor_serial' => $validated['gor_serial'],
+            'date_payment' => $validated['date_payment'],
+            'border_style' => $validated['border_style'] ?? null,
+        ];
+        
+        // Remove fields that don't exist in main certificates table
+        unset($validated['application_no'], $validated['date_of_receipt'], $validated['decision_no'], 
+                $validated['date_of_issue'], $validated['applicant_name'], $validated['business_name'], 
+                $validated['project_address'], $validated['project_type'], $validated['area_location'], 
+                $validated['lc_no'], $validated['or_no'], $validated['amount'], $validated['doc_stamp_tax'], 
+                $validated['gor_serial'], $validated['date_payment'], $validated['border_style']);
+        
+        $validated['additional_data'] = $additionalData;
+
+        // Save certificate to database
+        $certificate = Certificate::create($validated);
+
+        // Merge additional data back for template rendering
+        $certificateData = array_merge($validated, $additionalData);
+
+        return view('certificate.locational-clearance-template', $certificateData);
+    }
+
     public function generateBusiness(Request $request)
     {
         $validated = $request->validate([
             'owner_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'border_style' => 'nullable|string|max:255',
         ]);
 
         $validated['certificate_type'] = 'business';
@@ -86,6 +287,7 @@ class CertificateController extends Controller
             'year' => 'required|integer|min:2020|max:2030',
             'or_no' => 'nullable|string|max:255',
             'amount_paid' => 'nullable|string|max:255',
+            'border_style' => 'nullable|string|max:255',
         ]);
 
         $validated['certificate_type'] = 'residential';
@@ -179,6 +381,83 @@ class CertificateController extends Controller
         return view('certificate.business-template', $validated);
     }
 
+    public function generateLocationalClearance(Request $request)
+    {
+        $validated = $request->validate([
+            'application_no' => 'required|string|max:255',
+            'date_of_receipt' => 'required|string|max:255',
+            'decision_no' => 'required|string|max:255',
+            'date_of_issue' => 'required|string|max:255',
+            'applicant_name' => 'required|string|max:255',
+            'business_name' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'project_address' => 'required|string|max:255',
+            'project_type' => 'required|string|max:255',
+            'area_location' => 'required|string|max:255',
+            'conditions' => 'nullable|string',
+            'additional_conditions' => 'nullable|string',
+            'lc_no' => 'required|string|max:255',
+            'or_no' => 'required|string|max:255',
+            'amount' => 'required|string|max:255',
+            'doc_stamp_tax' => 'required|string|max:255',
+            'gor_serial' => 'required|string|max:255',
+            'date_payment' => 'required|string|max:255',
+            'border_style' => 'nullable|string|max:255',
+        ]);
+
+        $validated['certificate_type'] = 'locational-clearance';
+        $validated['certificate_number'] = Certificate::generateCertificateNumber();
+        $validated['user_id'] = auth()->id();
+        
+        // Map applicant_name to owner_name for database consistency
+        $validated['owner_name'] = $validated['applicant_name'];
+        
+        // Set default date values since locational clearance doesn't have these fields in form
+        $validated['day'] = date('j');
+        $validated['month'] = date('F');
+        $validated['year'] = date('Y');
+        
+        // Store all locational clearance specific fields in additional_data
+        $additionalData = [
+            'application_no' => $validated['application_no'],
+            'date_of_receipt' => $validated['date_of_receipt'],
+            'decision_no' => $validated['decision_no'],
+            'date_of_issue' => $validated['date_of_issue'],
+            'applicant_name' => $validated['applicant_name'],
+            'business_name' => $validated['business_name'] ?? null,
+            'project_address' => $validated['project_address'],
+            'project_type' => $validated['project_type'],
+            'area_location' => $validated['area_location'],
+            'conditions' => $validated['conditions'] ?? null,
+            'additional_conditions' => $validated['additional_conditions'] ?? null,
+            'lc_no' => $validated['lc_no'],
+            'or_no' => $validated['or_no'],
+            'amount' => $validated['amount'],
+            'doc_stamp_tax' => $validated['doc_stamp_tax'],
+            'gor_serial' => $validated['gor_serial'],
+            'date_payment' => $validated['date_payment'],
+            'border_style' => $validated['border_style'] ?? null,
+        ];
+        
+        // Remove fields that don't exist in main certificates table
+        unset($validated['application_no'], $validated['date_of_receipt'], $validated['decision_no'], 
+                $validated['date_of_issue'], $validated['applicant_name'], $validated['business_name'], 
+                $validated['project_address'], $validated['project_type'], $validated['area_location'], 
+                $validated['conditions'], $validated['additional_conditions'], $validated['lc_no'], 
+                $validated['or_no'], $validated['amount'], $validated['doc_stamp_tax'], 
+                $validated['gor_serial'], $validated['date_payment'], $validated['border_style']);
+        
+        $validated['additional_data'] = $additionalData;
+
+        // Save certificate to database
+        $certificate = Certificate::create($validated);
+
+        // Merge additional data back for template rendering
+        $certificateData = array_merge($validated, $additionalData);
+
+        return view('certificate.locational-clearance-template', $certificateData);
+    }
+
     public function index()
     {
         $certificates = Certificate::where('user_id', auth()->id())
@@ -198,10 +477,48 @@ class CertificateController extends Controller
         // Convert certificate to array for template
         $certificateData = $certificate->toArray();
         
+        // Merge additional data if it exists
+        if ($certificate->additional_data) {
+            $certificateData = array_merge($certificateData, $certificate->additional_data);
+        }
+        
         // Show the appropriate template based on certificate type
         switch ($certificate->certificate_type) {
             case 'residential':
                 return view('certificate.residential-template', $certificateData);
+            case 'locational-clearance':
+                return view('certificate.locational-clearance-template', $certificateData);
+            case 'business':
+            case 'landuse':
+            case 'building':
+            case 'compliance':
+            case 'environmental':
+            default:
+                return view('certificate.business-template', $certificateData);
+        }
+    }
+
+    public function preview(Certificate $certificate)
+    {
+        // Check if user owns this certificate
+        if ($certificate->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Convert certificate to array for template
+        $certificateData = $certificate->toArray();
+        
+        // Merge additional data if it exists
+        if ($certificate->additional_data) {
+            $certificateData = array_merge($certificateData, $certificate->additional_data);
+        }
+        
+        // Show the appropriate template based on certificate type
+        switch ($certificate->certificate_type) {
+            case 'residential':
+                return view('certificate.residential-template', $certificateData);
+            case 'locational-clearance':
+                return view('certificate.locational-clearance-template', $certificateData);
             case 'business':
             case 'landuse':
             case 'building':
@@ -225,6 +542,44 @@ class CertificateController extends Controller
             ->with('success', 'Certificate deleted successfully.');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        // Log the incoming request for debugging
+        \Log::info('Bulk delete request received', [
+            'certificate_ids' => $request->input('certificate_ids'),
+            'method' => $request->method(),
+            'all_request_data' => $request->all()
+        ]);
+
+        $certificateIds = $request->input('certificate_ids');
+        
+        if (empty($certificateIds)) {
+            return redirect()->route('certificate.index')
+                ->with('error', 'No certificates selected for deletion.');
+        }
+
+        // Convert comma-separated string to array
+        $ids = explode(',', $certificateIds);
+        
+        // Get certificates that belong to the current user
+        $certificates = Certificate::where('user_id', auth()->id())
+            ->whereIn('id', $ids)
+            ->get();
+
+        if ($certificates->isEmpty()) {
+            return redirect()->route('certificate.index')
+                ->with('error', 'No valid certificates found for deletion.');
+        }
+
+        // Delete the certificates
+        $deletedCount = Certificate::where('user_id', auth()->id())
+            ->whereIn('id', $ids)
+            ->delete();
+
+        return redirect()->route('certificate.index')
+            ->with('success', $deletedCount . ' certificate(s) deleted successfully.');
+    }
+
     public function download(Certificate $certificate)
     {
         // Check if user owns this certificate
@@ -235,10 +590,18 @@ class CertificateController extends Controller
         // Convert certificate to array for template
         $certificateData = $certificate->toArray();
         
+        // Merge additional data if it exists
+        if ($certificate->additional_data) {
+            $certificateData = array_merge($certificateData, $certificate->additional_data);
+        }
+        
         // Get the appropriate template HTML
         switch ($certificate->certificate_type) {
             case 'residential':
                 $html = view('certificate.residential-template', $certificateData)->render();
+                break;
+            case 'locational-clearance':
+                $html = view('certificate.locational-clearance-template', $certificateData)->render();
                 break;
             case 'business':
             case 'landuse':

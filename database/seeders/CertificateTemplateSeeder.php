@@ -125,6 +125,36 @@ class CertificateTemplateSeeder extends Seeder
                 'icon' => 'fas fa-leaf',
                 'color' => 'green',
                 'sort_order' => 6
+            ],
+            [
+                'name' => 'Locational Clearance',
+                'slug' => 'locational-clearance',
+                'category' => 'special',
+                'description' => 'For locational clearance certificates confirming project location compliance',
+                'view_file' => 'certificate.locational-clearance-template',
+                'fields' => [
+                    'application_no' => ['required' => true, 'label' => 'Application No.'],
+                    'date_of_receipt' => ['required' => true, 'label' => 'Date of Receipt'],
+                    'decision_no' => ['required' => true, 'label' => 'Decision No.'],
+                    'date_of_issue' => ['required' => true, 'label' => 'Date of Issue'],
+                    'applicant_name' => ['required' => true, 'label' => 'Applicant Name'],
+                    'business_name' => ['required' => false, 'label' => 'Name of Corporation/Business Name'],
+                    'address' => ['required' => true, 'label' => 'Address'],
+                    'project_address' => ['required' => true, 'label' => 'Project Address'],
+                    'project_type' => ['required' => true, 'label' => 'Type of Project'],
+                    'area_location' => ['required' => true, 'label' => 'Area and Location'],
+                    'conditions' => ['required' => false, 'label' => 'Conditions'],
+                    'additional_conditions' => ['required' => false, 'label' => 'Additional Conditions'],
+                    'lc_no' => ['required' => true, 'label' => 'LC No.'],
+                    'or_no' => ['required' => true, 'label' => 'OR No.'],
+                    'amount' => ['required' => true, 'label' => 'Amount'],
+                    'doc_stamp_tax' => ['required' => true, 'label' => 'Documentary Stamp Tax Paid'],
+                    'gor_serial' => ['required' => true, 'label' => 'GOR Serial Number'],
+                    'date_payment' => ['required' => true, 'label' => 'Date of Payment']
+                ],
+                'icon' => 'fas fa-map-pin',
+                'color' => 'indigo',
+                'sort_order' => 7
             ]
         ];
 

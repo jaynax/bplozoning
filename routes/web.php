@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CertificateDesignController;
+use App\Http\Controllers\ApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,27 @@ use App\Http\Controllers\CertificateDesignController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/debug-routes', function () {
+    $routes = app('router')->getRoutes();
+    $certificateRoutes = [];
+    
+    foreach ($routes as $route) {
+        if (strpos($route->getName(), 'certificate.') === 0) {
+            $certificateRoutes[] = [
+                'name' => $route->getName(),
+                'uri' => $route->uri(),
+                'methods' => implode(', ', $route->methods())
+            ];
+        }
+    }
+    
+    return response()->json($certificateRoutes);
+});
+
+Route::get('/basic-test', function() {
+    return 'Basic routing works!';
 });
 
 // Authentication Routes
@@ -46,6 +68,7 @@ Route::prefix('certificate')->middleware('auth')->group(function () {
     Route::get('/', [CertificateController::class, 'index'])->name('certificate.index');
     Route::get('/create', [CertificateController::class, 'createForm'])->name('certificate.create');
     Route::get('/{certificate}', [CertificateController::class, 'show'])->name('certificate.show');
+    Route::get('/{certificate}/preview', [CertificateController::class, 'preview'])->name('certificate.preview');
     Route::get('/{certificate}/download', [CertificateController::class, 'download'])->name('certificate.download');
     Route::delete('/{certificate}', [CertificateController::class, 'destroy'])->name('certificate.delete');
     Route::get('/business/form', [CertificateController::class, 'showBusinessForm'])->name('certificate.business.form');
@@ -54,12 +77,32 @@ Route::prefix('certificate')->middleware('auth')->group(function () {
     Route::get('/building/form', [CertificateController::class, 'showBuildingForm'])->name('certificate.building.form');
     Route::get('/compliance/form', [CertificateController::class, 'showComplianceForm'])->name('certificate.compliance.form');
     Route::get('/environmental/form', [CertificateController::class, 'showEnvironmentalForm'])->name('certificate.environmental.form');
+    Route::get('/locational-clearance/form', [CertificateController::class, 'showLocationalClearanceForm'])->name('certificate.locational-clearance.form');
+    Route::get('/locational-clearance/design', [CertificateController::class, 'selectLocationalClearanceDesign'])->name('certificate.locational-clearance.design');
+    Route::post('/locational-clearance/design-selected', [CertificateController::class, 'designSelected'])->name('certificate.locational-clearance.design-selected');
+    Route::get('/locational-clearance/edit', [CertificateController::class, 'editLocationalClearance'])->name('certificate.locational-clearance.edit');
+    Route::post('/locational-clearance/save', [CertificateController::class, 'saveLocationalClearance'])->name('certificate.locational-clearance.save');
+    Route::post('/locational-clearance/auto-save', [CertificateController::class, 'autoSaveLocationalClearance'])->name('certificate.locational-clearance.auto-save');
     Route::post('/business/generate', [CertificateController::class, 'generateBusiness'])->name('certificate.business.generate');
     Route::post('/residential/generate', [CertificateController::class, 'generateResidential'])->name('certificate.residential.generate');
     Route::post('/landuse/generate', [CertificateController::class, 'generateLandUse'])->name('certificate.landuse.generate');
     Route::post('/building/generate', [CertificateController::class, 'generateBuilding'])->name('certificate.building.generate');
     Route::post('/compliance/generate', [CertificateController::class, 'generateCompliance'])->name('certificate.compliance.generate');
     Route::post('/environmental/generate', [CertificateController::class, 'generateEnvironmental'])->name('certificate.environmental.generate');
+    Route::post('/locational-clearance/generate', [CertificateController::class, 'generateLocationalClearance'])->name('certificate.locational-clearance.generate');
+    Route::post('/bulk-delete', [CertificateController::class, 'bulkDelete'])->name('certificate.bulkDelete');
+    Route::get('/test-bulk', function() {
+        return 'Bulk delete route test - this should work';
+    })->name('certificate.test');
+    
+    Route::get('/simple-test', function() {
+        return 'Simple test route works!';
+    });
+});
+
+// API Routes
+Route::prefix('api')->group(function () {
+    Route::get('/borders', [ApiController::class, 'getBorders'])->name('api.borders');
 });
 
 // Certificate Design Routes

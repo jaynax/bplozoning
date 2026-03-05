@@ -82,7 +82,7 @@
 
     <img src="{{ URL::asset('assets/h.jpg') }}" 
          alt="Bagong Pilipinas" 
-         class="h-20 w-20 bg-blue-500 p-1 shadow-lg">
+         class="h-20 w-20 rounded-full bg-blue-500 p-1 shadow-lg">
 </header>
 
 <!-- Image Carousel Section -->
@@ -200,6 +200,40 @@
             <i class="fas fa-chevron-up"></i>
         </button>
     </div>
+
+    <footer class="footer-gradient text-white mt-20">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Municipality of Sogod</h4>
+                    <p class="text-gray-300 text-sm">
+                        Zoning Administration System<br>
+                        Southern Leyte, Philippines
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Services</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <p class="text-gray-300 text-sm">
+                        <i class="fas fa-phone mr-2"></i> (053) 123-4567<br>
+                        <i class="fas fa-envelope mr-2"></i> zoning@sogod.gov.ph
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2024 Municipality of Sogod, Southern Leyte. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>
