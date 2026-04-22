@@ -61,16 +61,30 @@ class CertificateController extends Controller
 
     public function designSelected(Request $request)
     {
+        // Debug: Log the incoming request
+        \Log::info('designSelected called with data: ', $request->all());
+        
         $selectedDesign = $request->input('border_style', '0.jpg');
         
-        // Redirect to the edit page with the selected design
-        return redirect()->route('certificate.locational-clearance.edit', ['border_style' => $selectedDesign]);
+        // Debug: Log the selected design
+        \Log::info('Selected border design: ' . $selectedDesign);
+        
+        // Redirect to the edit page with the selected design as query parameter
+        $url = route('certificate.locational-clearance.edit') . '?border_style=' . urlencode($selectedDesign);
+        \Log::info('Redirecting to: ' . $url);
+        return redirect($url);
     }
 
     public function editLocationalClearance(Request $request)
     {
+        // Debug: Log the incoming request
+        \Log::info('editLocationalClearance called with data: ', $request->all());
+        
         // Get selected border style from request or use default
         $borderStyle = $request->input('border_style', '0.jpg');
+        
+        // Debug: Log the border style
+        \Log::info('Border style for editing: ' . $borderStyle);
         
         // Return editable template with default values
         $defaultData = [
@@ -88,7 +102,7 @@ class CertificateController extends Controller
             'or_no' => '_________',
             'amount' => '_________',
             'doc_stamp_tax' => '_________',
-            'gor_serial' => '_________',
+            'gor_serial' => '12345',
             'date_payment' => '_________',
             'border_style' => $borderStyle,
             'certificate_type' => 'locational-clearance',
@@ -131,6 +145,9 @@ class CertificateController extends Controller
         
         // Map applicant_name to owner_name for database consistency
         $validated['owner_name'] = $validated['applicant_name'] ?? '_________________________';
+        
+        // Store the main address field (not project_address) for database consistency
+        $validated['address'] = $validated['address'] ?? '_________________________';
         
         // Set default date values
         $validated['day'] = date('j');
@@ -179,6 +196,9 @@ class CertificateController extends Controller
 
     public function saveLocationalClearance(Request $request)
     {
+        // Debug: Log the incoming request data
+        \Log::info('saveLocationalClearance called with data: ', $request->all());
+        
         $validated = $request->validate([
             'application_no' => 'required|string|max:255',
             'date_of_receipt' => 'required|string|max:255',
@@ -199,6 +219,9 @@ class CertificateController extends Controller
             'border_style' => 'nullable|string|max:255',
         ]);
 
+        // Debug: Log validation success
+        \Log::info('Validation passed. Validated data: ', $validated);
+
         $validated['certificate_type'] = 'locational-clearance';
         $validated['certificate_number'] = Certificate::generateCertificateNumber();
         $validated['user_id'] = auth()->id();
@@ -206,10 +229,16 @@ class CertificateController extends Controller
         // Map applicant_name to owner_name for database consistency
         $validated['owner_name'] = $validated['applicant_name'];
         
+        // Store the main address field (not project_address) for database consistency
+        $validated['address'] = $validated['address'];
+        
         // Set default date values
         $validated['day'] = date('j');
         $validated['month'] = date('F');
         $validated['year'] = date('Y');
+        
+        // Debug: Log final data before save
+        \Log::info('Final data before database save: ', $validated);
         
         // Store all locational clearance specific fields in additional_data
         $additionalData = [
@@ -243,10 +272,11 @@ class CertificateController extends Controller
         // Save certificate to database
         $certificate = Certificate::create($validated);
 
-        // Merge additional data back for template rendering
-        $certificateData = array_merge($validated, $additionalData);
+        // Debug: Log successful save
+        \Log::info('Certificate saved successfully. Certificate ID: ' . $certificate->id . ', Type: ' . $certificate->certificate_type);
 
-        return view('certificate.locational-clearance-template', $certificateData);
+        return redirect()->route('certificate.index')
+            ->with('success', 'Locational Clearance certificate saved successfully!');
     }
 
     public function generateBusiness(Request $request)
@@ -412,6 +442,9 @@ class CertificateController extends Controller
         // Map applicant_name to owner_name for database consistency
         $validated['owner_name'] = $validated['applicant_name'];
         
+        // Store the main address field (not project_address) for database consistency
+        $validated['address'] = $validated['address'];
+        
         // Set default date values since locational clearance doesn't have these fields in form
         $validated['day'] = date('j');
         $validated['month'] = date('F');
@@ -456,6 +489,84 @@ class CertificateController extends Controller
         $certificateData = array_merge($validated, $additionalData);
 
         return view('certificate.locational-clearance-template', $certificateData);
+    }
+
+    public function edit(Certificate $certificate)
+    {
+        // Check if user owns this certificate
+        if ($certificate->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Only allow editing business and residential certificates
+        if (!in_array($certificate->certificate_type, ['business', 'residential'])) {
+            abort(403, 'Editing is only allowed for business and residential certificates');
+        }
+
+        // Convert certificate to array for template
+        $certificateData = $certificate->toArray();
+        
+        // Merge additional data if it exists
+        if ($certificate->additional_data) {
+            $certificateData = array_merge($certificateData, $certificate->additional_data);
+        }
+
+        // Show the appropriate edit template based on certificate type
+        switch ($certificate->certificate_type) {
+            case 'residential':
+                return view('certificate.residential-edit', $certificateData);
+            case 'business':
+            default:
+                return view('certificate.business-edit', $certificateData);
+        }
+    }
+
+    public function update(Request $request, Certificate $certificate)
+    {
+        // Check if user owns this certificate
+        if ($certificate->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Only allow updating business and residential certificates
+        if (!in_array($certificate->certificate_type, ['business', 'residential'])) {
+            abort(403, 'Updating is only allowed for business and residential certificates');
+        }
+
+        // Validate based on certificate type
+        if ($certificate->certificate_type === 'business') {
+            $validated = $request->validate([
+                'owner_name' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'border_style' => 'nullable|string|max:255',
+            ]);
+        } else if ($certificate->certificate_type === 'residential') {
+            $validated = $request->validate([
+                'property_type' => 'required|string|max:255',
+                'occupancy_type' => 'required|string|max:255',
+                'owner_name' => 'required|string|max:255',
+                'contact_number' => 'nullable|string|max:255',
+                'address' => 'required|string|max:255',
+                'tax_dec_no' => 'required|string|max:255',
+                'lot_no' => 'required|string|max:255',
+                'floor_area' => 'nullable|string|max:255',
+                'num_families' => 'nullable|integer',
+                'day' => 'required|integer|min:1|max:31',
+                'month' => 'required|string|max:20',
+                'year' => 'required|integer|min:2020|max:2030',
+                'or_no' => 'nullable|string|max:255',
+                'amount_paid' => 'nullable|string|max:255',
+                'border_style' => 'nullable|string|max:255',
+            ]);
+
+            $validated['proposed_activity'] = $validated['property_type'] . ' - ' . $validated['occupancy_type'];
+        }
+
+        // Update certificate
+        $certificate->update($validated);
+
+        return redirect()->route('certificate.index')
+            ->with('success', 'Certificate updated successfully!');
     }
 
     public function index()

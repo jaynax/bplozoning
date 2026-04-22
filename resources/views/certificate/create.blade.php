@@ -13,8 +13,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <img src="{{ URL::asset('assets/lgu.png') }}" alt="LGU Logo" class="h-10 w-10 rounded-full">
-                    <span class="ml-3 text-xl font-semibold text-gray-900">Certificate Generation</span>
+                    <img src="{{ URL::asset('assets/elgu.png') }}" alt="eLGU Logo" class="h-8 w-auto">
+                    <span class="ml-3 text-xl font-semibold text-gray-900">
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('user.dashboard') }}" 

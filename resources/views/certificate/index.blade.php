@@ -2,7 +2,11 @@
 
 @section('title', 'My Certificates')
 
-@section('header-title', 'My Certificates')
+@section('header-title')
+    <img src="{{ URL::asset('assets/elgu.png') }}" 
+         alt="eLGU Logo" 
+         class="h-12 w-auto">
+@endsection
 
 @section('certificate-nav-active')
     background: rgba(102, 126, 234, 0.2);
@@ -24,9 +28,12 @@
     <!-- Page Header -->
     <div class="mb-8">
         <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">My Certificates</h1>
-                <p class="mt-2 text-sm text-gray-600">View and manage all your generated certificates</p>
+            <div class="flex items-center space-x-4">
+                
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">My Certificates</h1>
+                    <p class="mt-2 text-sm text-gray-600">View and manage all your generated certificates</p>
+                </div>
             </div>
             <div class="flex space-x-3">
                 <form id="bulkDeleteForm" action="{{ route('certificate.bulkDelete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete the selected certificates?')" class="hidden">
@@ -86,10 +93,10 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center">
                         <div class="p-3 bg-orange-100 rounded-lg">
-                            <i class="fas fa-map text-orange-600 text-xl"></i>
+                            <i class="fas fa-map-marker-alt text-orange-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Others</p>
+                            <p class="text-sm font-medium text-gray-600">Locational</p>
                             <p class="text-2xl font-bold text-gray-900">{{ $certificates->whereNotIn('certificate_type', ['business', 'residential'])->count() }}</p>
                         </div>
                     </div>
@@ -198,6 +205,11 @@
                                             <a href="{{ route('certificate.show', $certificate->id) }}" class="text-blue-600 hover:text-blue-900 transition-colors duration-150" title="View Certificate">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                            @if($certificate->certificate_type == 'business' || $certificate->certificate_type == 'residential')
+                                                <a href="{{ route('certificate.edit', $certificate->id) }}" class="text-green-600 hover:text-green-900 transition-colors duration-150" title="Edit Certificate">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endif
                                             <a href="{{ route('certificate.download', $certificate->id) }}" class="text-green-600 hover:text-green-900 transition-colors duration-150" title="Download Certificate">
                                                 <i class="fas fa-download"></i>
                                             </a>

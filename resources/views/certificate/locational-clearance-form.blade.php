@@ -1,131 +1,94 @@
 @extends('layouts.app')
 
-@section('title', 'Locational Clearance Form')
-
-@section('header-title', 'Locational Clearance Form')
-
-@section('certificate-nav-active')
-    background: rgba(102, 126, 234, 0.2);
-    border-left: 4px solid #667eea;
-@stop
-
 @section('content')
-<div class="min-h-screen">
-    <!-- Form Header -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-            <h1 class="text-2xl font-bold">Locational Clearance Application Form</h1>
-            <p class="text-blue-100 mt-2">Fill out the form below to apply for a locational clearance</p>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Locational Clearance</h1>
+                    <p class="text-gray-600 mt-2">Apply for a Locational Clearance certificate</p>
+                </div>
+                <img src="{{ asset('assets/lgu.png') }}" alt="LGU Logo" class="h-16 w-16">
+            </div>
         </div>
-    </div>
 
-    <!-- Application Form -->
-    <div class="bg-white rounded-xl shadow-lg p-6">
-        <form action="{{ route('certificate.locational-clearance.generate') }}" method="POST" class="space-y-6">
-            @csrf
+        <!-- Information Card -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 class="text-lg font-semibold text-blue-900 mb-3">
+                <i class="fas fa-info-circle mr-2"></i>About Locational Clearance
+            </h2>
+            <p class="text-blue-800 mb-4">
+                A Locational Clearance is required for any development project to ensure that the proposed use 
+                is compatible with the existing land use plan and zoning regulations of the municipality.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="font-semibold text-blue-900 mb-2">Requirements:</h3>
+                    <ul class="list-disc list-inside text-blue-800 space-y-1">
+                        <li>Valid ID of applicant</li>
+                        <li>Proof of ownership/lease</li>
+                        <li>Site development plan</li>
+                        <li>Building plans (if applicable)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-blue-900 mb-2">Processing Time:</h3>
+                    <p class="text-blue-800">3-5 working days</p>
+                    <h3 class="font-semibold text-blue-900 mb-2 mt-2">Validity:</h3>
+                    <p class="text-blue-800">1 year from date of issue</p>
+                </div>
+            </div>
+        </div>
 
-            <!-- Application Details -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Application Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Application Number</label>
-                        <input type="text" name="application_no" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+        <!-- Action Buttons -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Choose Your Action</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Start New Application -->
+                <div class="border-2 border-gray-200 rounded-lg p-6 hover:border-indigo-500 transition-colors">
+                    <div class="text-center">
+                        <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-indigo-100 mb-4">
+                            <i class="fas fa-plus-circle text-indigo-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Start New Application</h3>
+                        <p class="text-gray-600 mb-4">Create a new locational clearance application</p>
+                        <a href="{{ route('certificate.locational-clearance.design') }}" 
+                           class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                            <i class="fas fa-arrow-right mr-2"></i>
+                            Continue
+                        </a>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Receipt</label>
-                        <input type="date" name="date_of_receipt" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Decision Number</label>
-                        <input type="text" name="decision_no" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Issue</label>
-                        <input type="date" name="date_of_issue" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+
+                <!-- View Existing Certificates -->
+                <div class="border-2 border-gray-200 rounded-lg p-6 hover:border-green-500 transition-colors">
+                    <div class="text-center">
+                        <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-green-100 mb-4">
+                            <i class="fas fa-file-alt text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">View Existing Certificates</h3>
+                        <p class="text-gray-600 mb-4">Browse and manage your existing certificates</p>
+                        <a href="{{ route('certificate.index') }}" 
+                           class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                            <i class="fas fa-list mr-2"></i>
+                            View Certificates
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Applicant Information -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Applicant Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Applicant Name (Last, First, Middle)</label>
-                        <input type="text" name="applicant_name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Business/Corporation Name</label>
-                        <input type="text" name="business_name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                        <textarea name="address" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project Details -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Project Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Project Address</label>
-                        <textarea name="project_address" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Type of Project</label>
-                        <input type="text" name="project_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Area and Location</label>
-                        <textarea name="area_location" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payment Details -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">LC Number</label>
-                        <input type="text" name="lc_no" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">OR Number</label>
-                        <input type="text" name="or_no" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Amount (PHP)</label>
-                        <input type="text" name="amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Payment</label>
-                        <input type="date" name="date_payment" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Documentary Stamp Tax</label>
-                        <input type="text" name="doc_stamp_tax" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">GOR Serial Number</label>
-                        <input type="text" name="gor_serial" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="flex justify-between">
-                <a href="{{ route('certificate.create') }}" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-arrow-left mr-2"></i>Back
+            <!-- Back Button -->
+            <div class="mt-6 text-center">
+                <a href="{{ route('certificate.create') }}" 
+                   class="inline-flex items-center text-gray-600 hover:text-gray-900 font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Certificate Types
                 </a>
-                <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                    <i class="fas fa-file-alt mr-2"></i>Generate Certificate
-                </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection

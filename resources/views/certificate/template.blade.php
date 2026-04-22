@@ -35,7 +35,7 @@
             <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg mr-4">
                 <i class="fas fa-print mr-2"></i>Print Certificate
             </button>
-            <a href="{{ route('certificate.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
+            <a href="{{ route('certificate.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
                 <i class="fas fa-arrow-left mr-2"></i>Back to Form
             </a>
         </div>

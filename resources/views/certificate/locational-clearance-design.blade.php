@@ -36,7 +36,7 @@
                 <p class="text-gray-600 mt-2">Select a border style for your Locational Clearance certificate</p>
             </div>
 
-            <form action="{{ route('certificate.locational-clearance.design-selected') }}" method="POST" class="space-y-6">
+            <form action="{{ route('certificate.locational-clearance.design-selected') }}" method="POST" class="space-y-6" onsubmit="console.log('Form submitting with border_style:', document.getElementById('border_style').value); return true;">
                 @csrf
                 
                 <!-- Border Selection Grid -->
@@ -45,7 +45,7 @@
                 </div>
                 
                 <!-- Hidden input to store selected border -->
-                <input type="hidden" id="border_style" name="border_style" value="0.jpg" required>
+                <input type="hidden" id="border_style" name="border_style" value="0.jpg">
                 
                 <!-- Selected border display -->
                 <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
@@ -143,106 +143,6 @@
             
             // Update visual selection
             updateBorderSelection(borderFile);
-            
-            // Auto-save certificate to database
-            autoSaveCertificate(borderFile);
-        }
-
-        async function autoSaveCertificate(borderFile) {
-            try {
-                // Show loading indicator
-                showSavingIndicator();
-                
-                // Prepare certificate data with default values
-                const certificateData = {
-                    border_style: borderFile,
-                    application_no: '_________',
-                    date_of_receipt: '_________',
-                    decision_no: '_________',
-                    date_of_issue: '_________',
-                    applicant_name: '_________________________',
-                    business_name: 'NONE',
-                    address: '_________________________',
-                    project_address: '_________________________',
-                    project_type: '_________________________',
-                    area_location: '_________________________',
-                    lc_no: '_________',
-                    or_no: '_________',
-                    amount: '_________',
-                    doc_stamp_tax: '_________',
-                    gor_serial: '_________',
-                    date_payment: '_________',
-                    certificate_type: 'locational-clearance'
-                };
-                
-                // Save to database
-                const response = await fetch('/certificate/locational-clearance/auto-save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
-                                       document.querySelector('input[name="_token"]')?.value
-                    },
-                    body: JSON.stringify(certificateData)
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    showSuccessMessage('Certificate saved successfully!');
-                    console.log('Certificate saved with ID:', result.certificate_id);
-                } else {
-                    throw new Error('Failed to save certificate');
-                }
-            } catch (error) {
-                console.error('Error auto-saving certificate:', error);
-                showErrorMessage('Failed to save certificate. Please try again.');
-            } finally {
-                hideSavingIndicator();
-            }
-        }
-
-        function showSavingIndicator() {
-            // Create or update saving indicator
-            let indicator = document.getElementById('saving-indicator');
-            if (!indicator) {
-                indicator = document.createElement('div');
-                indicator.id = 'saving-indicator';
-                indicator.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                document.body.appendChild(indicator);
-            }
-            indicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving certificate...';
-            indicator.style.display = 'block';
-        }
-
-        function hideSavingIndicator() {
-            const indicator = document.getElementById('saving-indicator');
-            if (indicator) {
-                indicator.style.display = 'none';
-            }
-        }
-
-        function showSuccessMessage(message) {
-            showMessage(message, 'success');
-        }
-
-        function showErrorMessage(message) {
-            showMessage(message, 'error');
-        }
-
-        function showMessage(message, type) {
-            // Create message element
-            const messageEl = document.createElement('div');
-            messageEl.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 ${
-                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-            }`;
-            messageEl.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${message}`;
-            
-            document.body.appendChild(messageEl);
-            
-            // Auto-remove after 3 seconds
-            setTimeout(() => {
-                messageEl.remove();
-            }, 3000);
         }
 
         function updateBorderSelection(borderFile) {

@@ -42,7 +42,7 @@
                 page-break-inside: avoid !important;
             }
             .certificate-content {
-                padding: 5px !important;
+                padding: 60px 50px !important;
                 height: auto !important;
                 overflow: visible !important;
             }
@@ -123,8 +123,8 @@
             <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg mr-4">
                 <i class="fas fa-print mr-2"></i>Print Certificate
             </button>
-            <a href="{{ route('certificate.locational-clearance.form') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Form
+            <a href="{{ route('certificate.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
+                <i class="fas fa-arrow-left mr-2"></i>Certificates
             </a>
         </div>
 
@@ -256,11 +256,15 @@
                                 <span class="font-semibold">{{ $amount ?? '_________' }}</span>
                             </div>
                             <p class="mt-0.5 font-bold text-center">DOCUMENTARY STAMP TAX PAID</p>
-                            <div class="mt-0.5 flex justify-between text-sm leading-none">
-                                <span class="font-semibold">GOR SERIAL NUMBER</span>
-                                <span class="font-semibold">{{ $gor_serial ?? '_________' }}</span>
-                                <span class="font-semibold">DATE OF PAYMENT</span>
-                                <span class="font-semibold">{{ $date_payment ?? '_________' }}</span>
+                            <div class="mt-0.5 grid grid-cols-2 gap-x-2 text-sm leading-none">
+                                <div class="flex justify-between">
+                                    <span class="font-semibold">GOR SERIAL NUMBER</span>
+                                    <span class="font-semibold">{{ $gor_serial ?? '_________' }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-semibold">DATE OF PAYMENT</span>
+                                    <span class="font-semibold">{{ $date_payment ?? '_________' }}</span>
+                                </div>
                             </div>
                         </div>
                         

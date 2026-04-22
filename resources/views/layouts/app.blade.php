@@ -70,15 +70,15 @@
         <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 z-50 sidebar-gradient text-white lg:translate-x-0 mobile-menu">
             <div class="p-6">
                 <!-- Brand -->
-                <div class="flex items-center space-x-3 mb-8">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-shield-alt brand-icon text-xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-bold">eLGU</h2>
-                        <p class="text-xs text-gray-300">Zoning System</p>
-                    </div>
+                 <div class="flex items-center space-x-3 mb-8 fade-in">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg card-hover">
+                    <i class="fas fa-shield-alt brand-icon text-xl"></i>
                 </div>
+                <div>
+                    <h2 class="text-xl font-bold">eLGU</h2>
+                    <p class="text-xs text-gray-300">Zoning System</p>
+                </div>
+            </div>
                 
                 <!-- User Profile -->
                 <div class="glass-effect rounded-lg p-4 mb-6">
@@ -87,8 +87,8 @@
                             <i class="fas fa-user text-white"></i>
                         </div>
                         <div>
-                            <p class="font-semibold text-sm">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-300">{{ Auth::user()->email }}</p>
+                            <p class="font-bold text-sm text-gray-800">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-gray-600">{{ Auth::user()->email }}</p>
                         </div>
                     </div>
                 </div>

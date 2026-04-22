@@ -39,14 +39,15 @@
                 left: 0 !important;
             }
             .certificate-content {
-                position: absolute !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 80% !important;
-                height: 80% !important;
-                padding: 40px !important;
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 80px 20px 20px 60px !important;
                 background: transparent !important;
+                margin: 0 auto !important;
             }
             /* Fix text for printing - Portrait */
             .certificate-header h1,
@@ -58,11 +59,16 @@
             .payment-box p,
             .payment-box div {
                 font-size: 11pt !important;
-                line-height: 1.3 !important;
+                line-height: 1.4 !important;
                 transform: none !important;
                 letter-spacing: normal !important;
                 word-spacing: normal !important;
                 font-family: 'Times New Roman', Georgia, serif !important;
+                position: static !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                clear: both !important;
             }
             .certificate-header h1 {
                 font-size: 13pt !important;
@@ -80,6 +86,35 @@
                 font-size: 13pt !important;
                 font-weight: bold !important;
             }
+            
+            /* Add proper spacing between paragraphs */
+            .certificate-content p {
+                margin-bottom: 10pt !important;
+                margin-top: 0 !important;
+                text-align: justify !important;
+            }
+            
+            .certificate-content {
+                margin-top: -15px !important;
+                margin-left: -25px !important;
+            }
+            
+            .certificate-content p:first-child {
+                margin-top: 0 !important;
+            }
+            
+            .certificate-content p:last-child {
+                margin-bottom: 0 !important;
+            }
+            
+            /* Fix header text positioning */
+            .certificate-header {
+                margin-top: 30px !important;
+            }
+            
+            .certificate-title {
+                padding-left: 60px !important;
+            }
         }
         
         /* Landscape print styles */
@@ -89,9 +124,15 @@
                 height: 100vh !important;
             }
             .certificate-content {
-                width: 85% !important;
-                height: 85% !important;
-                padding: 50px !important;
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 90px 30px 30px 70px !important;
+                background: transparent !important;
+                margin: 0 auto !important;
             }
             /* Fix text for printing */
             .certificate-header h1,
@@ -103,10 +144,15 @@
             .payment-box p,
             .payment-box div {
                 font-size: 12pt !important;
-                line-height: 1.4 !important;
+                line-height: 1.5 !important;
                 transform: none !important;
                 letter-spacing: normal !important;
                 word-spacing: normal !important;
+                position: static !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                clear: both !important;
             }
             .certificate-header h1 {
                 font-size: 14pt !important;
@@ -124,6 +170,35 @@
                 font-size: 14pt !important;
                 font-weight: bold !important;
             }
+            
+            /* Add proper spacing between paragraphs */
+            .certificate-content p {
+                margin-bottom: 12pt !important;
+                margin-top: 0 !important;
+                text-align: justify !important;
+            }
+            
+            .certificate-content {
+                margin-top: -15px !important;
+                margin-left: -25px !important;
+            }
+            
+            .certificate-content p:first-child {
+                margin-top: 0 !important;
+            }
+            
+            .certificate-content p:last-child {
+                margin-bottom: 0 !important;
+            }
+            
+            /* Fix header text positioning */
+            .certificate-header {
+                margin-top: 30px !important;
+            }
+            
+            .certificate-title {
+                padding-left: 70px !important;
+            }
         }
         .certificate-border {
             padding: 80px 60px;
@@ -140,7 +215,7 @@
             position: relative;
             z-index: 10;
             background: transparent;
-            padding: 40px;
+            padding: 100px 40px 40px 80px;
             margin: 0;
             border-radius: 0;
         }
@@ -155,6 +230,7 @@
             font-family: 'Times New Roman', 'Georgia', serif;
             font-weight: 700;
             letter-spacing: 1px;
+            padding-left: 80px;
         }
         .certificate-content {
             color: #000000;
@@ -162,6 +238,8 @@
             font-size: 16px;
             line-height: 1.8;
             text-align: justify;
+            margin-top: -20px;
+            margin-left: -30px;
         }
         .payment-box {
             border: 2px solid #16a34a;
@@ -173,6 +251,11 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 500px;
+        }
+        .bagong-pilipinas-logo {
+            width: 80px;
+            height: 80px; 
+            object-fit: cover;
         }
         /* Background Designs */
         .bg-clean {
@@ -1053,8 +1136,8 @@
                 <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg mr-4">
                     <i class="fas fa-print mr-2"></i>Print Certificate
                 </button>
-                <a href="{{ route('certificate.business.form') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Form
+                <a href="{{ route('certificate.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>Certificates
                 </a>
             </div>
         </div>
@@ -1076,14 +1159,14 @@
                         </div>
                         
                         <!-- Bagong Pilipinas Logo on Right -->
-                        <img src="{{ URL::asset('assets/h.jpg') }}" alt="Bagong Pilipinas Logo" class="h-20 w-20 ml-8">
+                        <img src="{{ URL::asset('assets/h.jpg') }}" alt="Bagong Pilipinas Logo" class="bagong-pilipinas-logo ml-8">
                     </div>
                 </div>
 
                 <!-- Certificate Title -->
-                <div class="text-center mb-8">
-                    <h2 class="font-bold certificate-title underline" style="font-family: 'Broadway', sans-serif; font-size: 22px; color: #000080;">OFFICE OF THE MUNICIPAL PLANNING & DEV. COORDINATOR</h2>
-                    <h3 class="font-bold certificate-title mt-4" style="font-family: 'Lucida Handwriting', cursive; font-size: 40px; color: #000080;">CERTIFICATION</h3>
+                <div class="text-center mb-8" style="margin-top: 20px;">
+                    <h2 class="font-bold certificate-title underline" style="font-family: 'Broadway', sans-serif; font-size: 20px; color: #000080; padding-left: 20px;">OFFICE OF THE MUNICIPAL PLANNING & DEV. COORDINATOR</h2>
+                    <h3 class="font-bold certificate-title mt-4" style="font-family: 'Lucida Handwriting', cursive; font-size: 48px; color: #000080;">CERTIFICATION</h3>
                 </div>
 
                 <!-- Certificate Content -->

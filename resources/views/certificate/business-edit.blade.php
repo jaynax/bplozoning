@@ -1,186 +1,245 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Zoning Certificate | Municipality of Sogod</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @media print {
-            .no-print { display: none !important; }
-            body { 
-                margin: 0 !important; 
-                padding: 0 !important;
-                background: white !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .certificate-container { 
-                margin: 0 !important; 
-                padding: 0 !important;
-                box-shadow: none !important;
-                width: 100vw !important;
-                height: 100vh !important;
-            }
-            .certificate-border {
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                background-size: 100% 100% !important;
-                background-image: url('{{ URL::asset("assets/borders/" . ($border_style ?? "0.jpg")) }}') !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-            }
-            .certificate-content {
-                position: absolute !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 80% !important;
-                height: 80% !important;
-                padding: 40px !important;
-                background: transparent !important;
-            }
-        }
-        .certificate-border {
-            padding: 80px 60px;
-            background: white;
-            position: relative;
-            background-image: url('{{ URL::asset("assets/borders/" . ($border_style ?? "0.jpg")) }}');
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 842px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .certificate-content {
-            position: relative;
-            z-index: 10;
-            background: transparent;
-            padding: 40px;
-            margin: 0;
-            border-radius: 0;
-        }
-        .official-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }
-        .official-table td {
-            border: 1px solid #000;
-            padding: 8px;
-            vertical-align: top;
-        }
-        .label-cell {
-            background-color: #f3f4f6;
-            font-weight: bold;
-            width: 25%;
-        }
-        .payment-box {
-            background-color: #dcfce7;
-            border: 2px solid #16a34a;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: 2rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="certificate-container">
-        <div class="certificate-border">
-            <div class="certificate-content">
-                <!-- Header -->
-                <div class="mb-8">
-                    <div class="flex items-center justify-center relative">
-                        <!-- Logo on Left -->
-                        <img src="{{ URL::asset('assets/lgu.png') }}" alt="LGU Logo" class="h-20 w-20 mr-8">
-                        
-                        <!-- Centered Text -->
-                        <div class="text-center">
-                            <p class="text-lg text-gray-900">Republic of the Philippines</p>
-                            <p class="text-base text-gray-800">Province of Southern Leyte</p>
-                            <p class="text-xl font-bold text-gray-900">MUNICIPALITY OF SOGOD</p>
-                        </div>
-                        
-                        <!-- Bagong Pilipinas Logo on Right -->
-                        <img src="{{ URL::asset('assets/h.jpg') }}" alt="Bagong Pilipinas Logo" class="h-20 w-20 ml-8">
-                    </div>
-                    <div class="text-center mt-4">
-                        <h1 class="text-lg font-bold text-gray-900 border-b-2 border-gray-900 inline-block">OFFICE OF THE MUNICIPAL PLANNING & DEV. COORDINATOR</h1>
-                    </div>
-                </div>
+@extends('layouts.app')
 
-                <!-- Certificate Title -->
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900 tracking-widest">BUSINESS ZONING CERTIFICATE</h2>
-                </div>
+@section('title', 'Edit Business Certificate')
 
-                <!-- Certificate Content -->
-                <div class="mb-8">
-                    <p class="text-xl font-bold text-gray-900 mb-6 text-left">TO WHOM IT MAY CONCERN:</p>
-                    
-                    <p class="text-lg leading-relaxed text-gray-900 mb-6">
-                        THIS IS TO CERTIFY that the proposed 
-                        <span class="font-bold underline">{{ $property_type ?? 'BUSINESS ESTABLISHMENT' }}</span> (
-                        <span class="font-bold underline">{{ $occupancy_type ?? 'COMMERCIAL' }}</span>) of 
-                        <span class="font-bold underline">{{ $owner_name ?? 'BUSINESS OWNER' }}</span>
-                        located at 
-                        <span class="font-bold underline">{{ $address ?? 'BUSINESS ADDRESS' }}</span>, Sogod, Southern Leyte and identified as Tax Dec No. 
-                        <span class="font-bold underline">{{ $tax_dec_no ?? '_________' }}</span> with a Lot No. 
-                        <span class="font-bold underline">{{ $lot_no ?? '_________' }}</span> is within the as per Zoning Ordinance of this municipality.
-                    </p>
+@section('header-title', 'Edit Business Certificate')
 
-                    <p class="text-lg leading-relaxed text-gray-900 mb-6">
-                        <span class="font-bold">THIS IS TO CERTIFY FURTHER</span> that the above mentioned site is conforms to the existing Zoning Plan of the Municipality.
-                    </p>
-
-                    <p class="text-lg leading-relaxed text-gray-900 mb-12">
-                        <span class="font-bold">THIS CERTIFICATION IS HEREBY ISSUED</span> for whatever legal purpose it may serve.
-                    </p>
-
-                    <p class="text-lg text-gray-900 mb-12">
-                        <span class="font-bold">DONE</span> this <span class="font-bold underline">{{ $day ?? '___' }}</span> day of 
-                        <span class="font-bold underline">{{ $month ?? '_________' }}</span>, 
-                        <span class="font-bold underline">{{ $year ?? '____' }}</span> at Sogod, Southern Leyte, Philippines.
-                    </p>
-
-                    <div class="flex justify-end mb-8">
-                        <div class="text-center">
-                            <p class="font-bold border-b-2 border-gray-900 pb-1">RUEL E. ALTEJAR</p>
-                            <p class="text-sm">MPDC</p>
-                        </div>
-                    </div>
-
-                    <div class="mb-8 text-left">
-                        <p class="text-lg text-gray-900">APPROVED BY:</p>
-                        <div class="mt-6 pr-20">
-                            <p class="font-bold border-b-2 border-gray-900 pb-1 inline-block">HON. SHEFFERED LINO S. TAN</p>
-                            <p class="text-sm">Municipal Mayor</p>
-                        </div>
-                    </div>
-
-                    <div class="payment-box">
-                        <p class="text-center font-bold text-green-800 mb-4">NOT VALID WITHOUT SEAL</p>
-                        <p class="mb-2"><strong>BZC NO. :</strong> <span class="font-semibold">{{ $bzc_no ?? '_________' }}</span></p>
-                        <p class="mb-2"><strong>OR NO. :</strong> <span class="font-semibold">{{ $or_no ?? '_________' }}</span></p>
-                        <p class="mb-2"><strong>Date Issued :</strong> <span class="font-semibold">{{ $date_of_issue ?? '_________' }}</span></p>
-                        <p class="mb-2"><strong>Amount :</strong> <span class="font-semibold">Php {{ $amount ?? '_________' }}</span></p>
-                        <p class="mt-4 font-bold text-center text-green-800">DOCUMENTARY STAMP TAX PAID</p>
-                        <div class="mt-3 flex justify-between text-sm">
-                            <p><strong>GOR SERIAL NUMBER</strong> <span class="font-semibold">{{ $gor_serial ?? '_________' }}</span></p>
-                            <p><strong>DATE OF PAYMENT</strong> <span class="font-semibold">{{ $date_payment ?? '_________' }}</span></p>
-                        </div>
-                    </div>
-                </div>
+@section('content')
+<div class="min-h-screen">
+    <!-- Success Message -->
+    @if(session('success'))
+        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                {{ session('success') }}
             </div>
         </div>
+    @endif
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div class="mb-8 text-center">
+                <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-blue-100 mb-4">
+                    <i class="fas fa-briefcase text-blue-600 text-2xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900">Edit Business Zoning Certificate</h1>
+                <p class="text-gray-600 mt-2">Update business owner details for zoning certification</p>
+            </div>
+
+            <form action="{{ route('certificate.update', $id) }}" method="POST" class="space-y-6">
+                @csrf
+                @method('PUT')
+                
+                @if ($errors->any())
+                    <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- Owner Information -->
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Owner Information</h3>
+                    
+                    <div>
+                        <label for="owner_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Full Name <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="text" 
+                                   id="owner_name" 
+                                   name="owner_name" 
+                                   value="{{ $owner_name ?? '' }}"
+                                   required
+                                   class="w-full px-4 py-2 border-0 border-b-2 border-gray-400 rounded-none focus:ring-0 focus:border-blue-500 focus:border-b-2 bg-transparent"
+                                   placeholder="Enter full name of business owner">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">This will appear as: _________________________ in certificate</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                            Complete Address <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="text" 
+                                   id="address" 
+                                   name="address" 
+                                   value="{{ $address ?? '' }}"
+                                   required
+                                   class="w-full px-4 py-2 border-0 border-b-2 border-gray-400 rounded-none focus:ring-0 focus:border-blue-500 focus:border-b-2 bg-transparent"
+                                   placeholder="Enter complete address (e.g., Poblacion, Sogod, Southern Leyte)">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">This will appear as: _______________________________________ in certificate</p>
+                    </div>
+                </div>
+
+                <!-- Certificate Details -->
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Certificate Details</h3>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Certificate Number: <strong>{{ $certificate_number ?? '' }}</strong>
+                        </p>
+                        <p class="text-sm text-blue-800 mt-1">
+                            <i class="fas fa-calendar mr-2"></i>
+                            Original Date: <strong>{{ ($day ?? '') . ' ' . ($month ?? '') . ' ' . ($year ?? '') }}</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Border Style Selection -->
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Certificate Design</h3>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Certificate Border Style
+                    </label>
+                    
+                    <!-- Dynamic Border Selection Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4" id="border-selection-grid">
+                        <!-- Borders will be dynamically loaded here -->
+                    </div>
+                    
+                    <!-- Hidden input to store selected border -->
+                    <input type="hidden" id="border_style" name="border_style" value="{{ $border_style ?? '0.jpg' }}">
+                    
+                    <!-- Selected border display -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Selected: <span id="selected-border-name" class="font-semibold">Simple Border</span>
+                        </p>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-2">Click on any border style to select it for your certificate</p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-between pt-6">
+                    <a href="{{ route('certificate.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-8 rounded-lg transition duration-200 flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition duration-200 flex items-center">
+                        <i class="fas fa-save mr-2"></i>
+                        Update Business Certificate
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-</html>
+
+    <script>
+        // Load borders when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBorders();
+        });
+
+        async function loadBorders() {
+            const borderGrid = document.getElementById('border-selection-grid');
+            const selectedBorderInput = document.getElementById('border_style');
+            const selectedBorderName = document.getElementById('selected-border-name');
+            
+            try {
+                // Try to load borders from API
+                const response = await fetch('{{ route("api.borders") }}');
+                if (response.ok) {
+                    const borders = await response.json();
+                    displayBorders(borders);
+                } else {
+                    throw new Error('API request failed');
+                }
+            } catch (error) {
+                console.log('Loading fallback borders...');
+                loadFallbackBorders();
+            }
+        }
+
+        function displayBorders(borders) {
+            const borderGrid = document.getElementById('border-selection-grid');
+            borderGrid.innerHTML = '';
+            
+            borders.forEach(border => {
+                const borderElement = createBorderElement(border);
+                borderGrid.appendChild(borderElement);
+            });
+            
+            // Set initial selection from current border style
+            const currentBorder = '{{ $border_style ?? "0.jpg" }}';
+            updateBorderSelection(currentBorder);
+        }
+
+        function createBorderElement(border) {
+            const div = document.createElement('div');
+            div.className = 'border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-blue-500 transition-colors duration-200';
+            div.onclick = () => selectBorder(border.file, border.displayName || border.file);
+            
+            // Get base URL for assets
+            const assetBaseUrl = '{{ URL::asset("assets/borders/") }}';
+            const imageUrl = border.url || assetBaseUrl + border.file;
+            const fallbackUrl = '{{ URL::asset("assets/borders/0.jpg") }}';
+            
+            div.innerHTML = `
+                <div class="aspect-square bg-gray-100 rounded mb-2 overflow-hidden">
+                    <img src="${imageUrl}" 
+                         alt="${border.displayName || border.file}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='${fallbackUrl}'">
+                </div>
+                <p class="text-xs text-center text-gray-700 font-medium">${border.displayName || border.file}</p>
+                <p class="text-xs text-center text-gray-500">${border.style || 'Default'}</p>
+            `;
+            
+            return div;
+        }
+
+        function selectBorder(borderFile, borderName) {
+            // Update hidden input
+            document.getElementById('border_style').value = borderFile;
+            
+            // Update selected border name display
+            document.getElementById('selected-border-name').textContent = borderName;
+            
+            // Update visual selection
+            updateBorderSelection(borderFile);
+        }
+
+        function updateBorderSelection(borderFile) {
+            // Remove previous selection
+            document.querySelectorAll('#border-selection-grid > div').forEach(el => {
+                el.classList.remove('border-blue-500', 'bg-blue-50');
+                el.classList.add('border-gray-200');
+            });
+            
+            // Add selection to current border
+            const currentBorder = document.querySelector(`#border-selection-grid > div[onclick*="${borderFile}"]`);
+            if (currentBorder) {
+                currentBorder.classList.remove('border-gray-200');
+                currentBorder.classList.add('border-blue-500', 'bg-blue-50');
+            }
+        }
+
+        function loadFallbackBorders() {
+            // Fallback borders if API fails - using exact files from assets/borders directory
+            const fallbackBorders = [
+                { file: '0.jpg', displayName: 'Simple Border', style: 'Default' },
+                { file: 'l.jpg', displayName: 'Traditional Border', style: 'Classic' },
+                { file: 'p.jpg', displayName: 'Formal Border', style: 'Official' },
+                { file: 'n.png', displayName: 'Decorative Border', style: 'Artistic' },
+                { file: 'a2a02a17a2b86484bc9234bd7e337b8c.jpg', displayName: 'Vintage Border', style: 'Classic' },
+                { file: 'Beige Brown Classic Certificate Participation Template.png', displayName: 'Beige Brown Classic', style: 'Traditional' },
+                { file: 'Blue and Gold Creative Certificate Template.png', displayName: 'Blue Gold Creative', style: 'Modern' },
+                { file: 'Blue and Gold Modern Certification Certificate.png', displayName: 'Blue Gold Modern', style: 'Modern' },
+                { file: 'Gold Elegant Certificate of Achievement Template.png', displayName: 'Gold Elegant', style: 'Elegant' },
+                { file: 'Gold Modern Achievement Certificate.png', displayName: 'Gold Modern', style: 'Modern' }
+            ];
+            
+            displayBorders(fallbackBorders);
+        }
+    </script>
+</div>
+@endsection

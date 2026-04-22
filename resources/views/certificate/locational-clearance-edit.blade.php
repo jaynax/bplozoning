@@ -159,7 +159,7 @@
                 <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg">
                     <i class="fas fa-print mr-2"></i>Print Certificate
                 </button>
-                <a href="{{ route('certificate.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
+                <a href="{{ route('certificate.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Certificate Types
                 </a>
             </div>
@@ -297,11 +297,19 @@
                                 <div contenteditable="true" class="editable-field inline" name="amount">{{ $amount }}</div>
                             </div>
                             <p class="mt-0.5 font-bold text-center">DOCUMENTARY STAMP TAX PAID</p>
-                            <div class="mt-0.5 flex justify-between text-sm leading-none">
-                                <span class="font-semibold">GOR SERIAL NUMBER</span>
-                                <div contenteditable="true" class="editable-field inline" name="gor_serial">{{ $gor_serial }}</div>
-                                <span class="font-semibold">DATE OF PAYMENT</span>
-                                <div contenteditable="true" class="editable-field inline" name="date_payment">{{ $date_payment }}</div>
+                            <div class="mt-0.5 grid grid-cols-3 gap-x-2 text-sm leading-none">
+                                <div class="text-center">
+                                    <span class="font-semibold">DOCUMENTARY STAMP TAX</span>
+                                    <div contenteditable="true" class="editable-field inline" name="doc_stamp_tax">{{ $doc_stamp_tax }}</div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="font-semibold">GOR SERIAL NUMBER</span>
+                                    <div contenteditable="true" class="editable-field inline" name="gor_serial">{{ $gor_serial }}</div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="font-semibold">DATE OF PAYMENT</span>
+                                    <div contenteditable="true" class="editable-field inline" name="date_payment">{{ $date_payment }}</div>
+                                </div>
                             </div>
                         </div>
                         

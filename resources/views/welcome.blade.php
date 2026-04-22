@@ -62,8 +62,9 @@
 
     <nav class="bg-white border-b px-8 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <span class="text-blue-800 font-bold text-xl">eLGU</span>
-            <span class="text-gray-400 text-sm border-l pl-2">ZONING</span>
+            <img src="{{ URL::asset('assets/elgu.png') }}" 
+                 alt="eLGU Logo" 
+                 class="h-16 w-auto">
         </div>
         <a href="{{ route('login') }}" class="text-blue-700 font-semibold hover:underline">LOGIN</a>
     </nav>
